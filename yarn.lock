@@ -47,9 +47,9 @@
   version "0.22.7"
   resolved "https://registry.yarnpkg.com/@types/cheerio/-/cheerio-0.22.7.tgz#4a92eafedfb2b9f4437d3a4410006d81114c66ce"
 
-"@types/compression@^0.0.34":
-  version "0.0.34"
-  resolved "https://registry.yarnpkg.com/@types/compression/-/compression-0.0.34.tgz#c7eb6bdd2b919099c9da62f2158934894af887f1"
+"@types/compression@^0.0.35":
+  version "0.0.35"
+  resolved "https://registry.yarnpkg.com/@types/compression/-/compression-0.0.35.tgz#7673a9c4b075e5194ada8c5938291015652a21e1"
   dependencies:
     "@types/express" "*"
 
@@ -95,9 +95,9 @@
   dependencies:
     "@types/node" "*"
 
-"@types/helmet@^0.0.36":
-  version "0.0.36"
-  resolved "https://registry.yarnpkg.com/@types/helmet/-/helmet-0.0.36.tgz#1eb9a85f89ba638013171a3b24b6725b1809e60d"
+"@types/helmet@^0.0.37":
+  version "0.0.37"
+  resolved "https://registry.yarnpkg.com/@types/helmet/-/helmet-0.0.37.tgz#6b150f30219c0d6563e8e0a3fbcad8dd90fa4f68"
   dependencies:
     "@types/express" "*"
 
@@ -150,8 +150,8 @@
     "@types/node" "*"
 
 "@types/node@*", "@types/node@^8.0.31":
-  version "8.5.2"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-8.5.2.tgz#83b8103fa9a2c2e83d78f701a9aa7c9539739aa5"
+  version "8.5.5"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-8.5.5.tgz#6f9e8164ae1a55a9beb1d2571cfb7acf9d720c61"
 
 "@types/q@^1.0.5":
   version "1.0.6"
@@ -413,7 +413,7 @@ bluebird@3.5.0:
   version "3.5.0"
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.5.0.tgz#791420d7f551eea2897453a8a77653f96606d67c"
 
-body-parser@1.18.2:
+body-parser@1.18.2, body-parser@^1.18.2:
   version "1.18.2"
   resolved "https://registry.yarnpkg.com/body-parser/-/body-parser-1.18.2.tgz#87678a19d84b47d859b83199bd59bce222b10454"
   dependencies:
