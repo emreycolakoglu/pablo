@@ -31,6 +31,7 @@
     "request": "^2.83.0",
     "satellizer": "^0.15.5",
     "slug": "^0.9.1",
+    "tslint": "^5.8.0",
     "typescript": "^2.6.2",
     "winston": "^2.4.0"
   },
