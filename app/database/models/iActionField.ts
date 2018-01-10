@@ -5,6 +5,10 @@
 
 import { IBase } from "./iBase";
 
-export interface IActionField extends IBase {
+export interface IActionField {
   name: string;
+}
+
+export interface IMongoActionField extends IActionField, IBase {
+
 }
