@@ -6,9 +6,7 @@ var clean = require('gulp-clean');
 var runSequence = require('run-sequence');
 var sourcemaps = require('gulp-sourcemaps');
 
-var tsProject = ts.createProject('tsconfig.json', {
-  declaration: true
-});
+var tsProject = ts.createProject('tsconfig.json');
 
 gulp.task('build', function (callback) {
   runSequence('clean', ['scripts'], ['views'], callback);
