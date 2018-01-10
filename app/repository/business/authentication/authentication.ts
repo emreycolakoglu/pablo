@@ -35,7 +35,7 @@ export class Authentication {
     return d.promise;
   }
 
-  private static async login(email: string, password: string) {
+  public static async login(email: string, password: string) {
     const d = Q.defer();
 
     UserSchema.findOne({
