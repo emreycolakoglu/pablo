@@ -59,12 +59,15 @@
     "@types/slack-node": "^0.1.1",
     "@types/slack-winston": "^0.0.0",
     "@types/winston": "^2.3.6",
+    "@uirouter/angularjs": "^1.0.12",
     "angular": "^1.6.8",
+    "angular-ui-bootstrap": "^2.5.6",
     "gulp-concat": "^2.6.1",
     "gulp-copy": "^1.0.1",
     "gulp-sourcemaps": "^2.6.3",
     "gulp-typescript": "^3.2.3",
     "gulp-uglify": "^3.0.0",
+    "oclazyload": "^1.1.0",
     "run-sequence": "^2.2.1"
   }
 }

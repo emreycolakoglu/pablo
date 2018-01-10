@@ -7,7 +7,7 @@ import * as helmet from "helmet";
 import * as compression from "compression";
 import routes from "./routes";
 import * as cors from "cors";
-//import * as tasks from "./helpers/taskRunner";
+// import * as tasks from "./helpers/taskRunner";
 import logger from "./logger";
 // Creates and configures an ExpressJS web server.
 class App {
@@ -32,14 +32,14 @@ class App {
     this.express.use(cors());
     this.express.use(compression());
     this.express.use(helmet());
-    this.express.set('view engine', 'ejs');
-    this.express.set('views', path.join(__dirname, '../dist/views'));
+    this.express.set("view engine", "ejs");
+    this.express.set("views", path.join(__dirname, "../dist/views"));
   }
 
   // Configure API endpoints.
   private routes(): void {
     this.express.use("/", function (req, res) {
-      res.render('index', { title: 'The index page!' })
+      res.render("index", { title: "The index page!" });
     });
     this.express.use("/panel", express.static("/panel"));
     this.express.use("/api", <express.Router>routes);
@@ -47,9 +47,7 @@ class App {
 
   private databaseConnection(): void {
     (<any>mongoose).Promise = Promise;
-    const promise = mongoose.connect(process.env.MONGOSTRING, {
-      useMongoClient: true
-    } as mongoose.ConnectionOptions, (err: any) => {
+    const promise = mongoose.connect(process.env.MONGOSTRING, (err: any) => {
       if (err) {
         logger.error(err);
       }
@@ -60,7 +58,7 @@ class App {
   }
 
   private postInitSetup() {
-    //tasks.scheduleAll();
+    // tasks.scheduleAll();
   }
 }
 
