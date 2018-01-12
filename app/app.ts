@@ -38,10 +38,11 @@ class App {
 
   // Configure API endpoints.
   private routes(): void {
-    this.express.use("/", function (req, res) {
+    this.express.get("/", function (req, res) {
       res.render("index", { title: "The index page!" });
     });
-    this.express.use("/panel", express.static("/panel"));
+    this.express.use("/node_modules", express.static(path.join(__dirname, "../node_modules")));
+    this.express.use("/panel", express.static(path.join(__dirname, "./panel")));
     this.express.use("/api", <express.Router>routes);
   }
 

@@ -9,7 +9,7 @@ var sourcemaps = require('gulp-sourcemaps');
 var tsProject = ts.createProject('tsconfig.json');
 
 gulp.task('build', function (callback) {
-  runSequence('clean', ['scripts'], ['views'], callback);
+  runSequence('clean', ['scripts'], ['views'], ['panel'], callback);
 });
 
 gulp.task('scripts', function () {
@@ -26,7 +26,13 @@ gulp.task('views', function () {
     './app/views/*'
   ])
     .pipe(copy('./dist/views/', { prefix: 10 }))
-})
+});
+
+gulp.task('panel', function () {
+  return gulp.src([
+    './panel/**/*.js'
+  ]).pipe(copy('./dist/panel', { prefix: 10 }))
+});
 
 gulp.task('clean', function () {
   return gulp.src('./dist/', { read: false })
@@ -36,4 +42,5 @@ gulp.task('clean', function () {
 gulp.task('watch', ['scripts'], function () {
   gulp.watch('app/**/*.ts', ['scripts']);
   gulp.watch('./app/views/*', ['views']);
+  gulp.watch('./panel/**/*.js', ['panel']);
 });
