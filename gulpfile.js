@@ -30,8 +30,8 @@ gulp.task('views', function () {
 
 gulp.task('panel', function () {
   return gulp.src([
-    './panel/**/*.js'
-  ]).pipe(copy('./dist/panel', { prefix: 10 }))
+    './panel/**/*'
+  ]).pipe(copy('./dist/panel', { prefix: 1 }))
 });
 
 gulp.task('clean', function () {
