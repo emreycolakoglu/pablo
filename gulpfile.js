@@ -9,10 +9,10 @@ var sourcemaps = require('gulp-sourcemaps');
 var tsProject = ts.createProject('tsconfig.json');
 
 gulp.task('build', function (callback) {
-  runSequence('clean', ['scripts'], ['views'], ['panel'], callback);
+  runSequence('clean', ['typescript'], ['views'], ['panel'], callback);
 });
 
-gulp.task('scripts', function () {
+gulp.task('typescript', function () {
   var tsResult = tsProject.src()
     .pipe(sourcemaps.init())
     .pipe(tsProject());
@@ -39,8 +39,8 @@ gulp.task('clean', function () {
     .pipe(clean());
 });
 
-gulp.task('watch', ['scripts'], function () {
-  gulp.watch('app/**/*.ts', ['scripts']);
+gulp.task('watch', ['build'], function () {
+  gulp.watch('app/**/*.ts', ['typescript']);
   gulp.watch('./app/views/*', ['views']);
-  gulp.watch('./panel/**/*.js', ['panel']);
+  gulp.watch('./panel/**/*', ['panel']);
 });

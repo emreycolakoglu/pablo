@@ -50,7 +50,9 @@ export class Authentication {
         });
       }
       else {
-        d.resolve(undefined);
+        d.reject({
+          message: "No user found"
+        });
       }
     }).catch((error: any) => {
       d.reject(error);

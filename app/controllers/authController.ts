@@ -2,12 +2,18 @@ import { Authentication } from "../repository/business/authentication";
 
 export default class AuthController {
   public static async login(req, res) {
-    const user = await Authentication.login(req.body.email, req.body.password);
-    res.json(user);
+    Authentication.login(req.body.email, req.body.password).then((user) => {
+      res.json(user);
+    }).catch((error: any) => {
+      res.status(500).send({ message: error.message });
+    });
   }
 
   public static async register(req, res) {
-    const user = await Authentication.passwordRegister(req.body.email, req.body.password);
-    res.json(user);
+    Authentication.passwordRegister(req.body.email, req.body.password).then((user) => {
+      res.json(user);
+    }).catch((error: any) => {
+      res.status(500).send({ message: error.message });
+    });
   }
 }
