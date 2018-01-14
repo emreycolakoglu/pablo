@@ -1,8 +1,9 @@
+import AuthController from "./controllers/authController";
+import { Authentication } from "./repository/business/authentication";
+import ServiceController from "./controllers/serviceController";
 import * as express from "express";
-import * as sth from "express-serve-static-core";
 const routes = express.Router();
 
-import AuthController from "./controllers/authController";
 
 routes.use(function (req, res, next) {
   if (!req.query.limit) req.query.limit = 10;
@@ -16,5 +17,14 @@ routes.route("/auth/login")
   .post(AuthController.login);
 routes.route("/auth/register")
   .post(AuthController.register);
+
+routes.route("/services")
+  .get(ServiceController.getList)
+  .post(Authentication.checkToken("admin"), ServiceController.create);
+routes.route("/category/:id")
+  .get(ServiceController.getWithId)
+  .put(Authentication.checkToken("admin"), ServiceController.update)
+  .patch(Authentication.checkToken("admin"), ServiceController.patch)
+  .delete(Authentication.checkToken("admin"), ServiceController.delete);
 
 export default routes;

@@ -5,6 +5,7 @@ const userSchema = new Schema({
   email: { type: String, unique: true },
   password: { type: String },
   name: { type: String },
+  roles: [{ type: String }],
   createdAt: { type: Date, required: false },
   modifiedAt: { type: Date, required: false }
 })

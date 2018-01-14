@@ -148,7 +148,7 @@
                     </li>
                     <li class="divider"></li>
                     <li>
-                        <a href="login.html">
+                        <a href="javascript:;" ng-click="rootVm.logout()">
                             <i class="fa fa-sign-out fa-fw"></i> Logout</a>
                     </li>
                 </ul>
@@ -175,6 +175,10 @@
                     <li>
                         <a ui-sref="dashboard.index" ui-sref-active="active">
                             <i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+                    </li>
+                    <li>
+                        <a ui-sref="dashboard.services.list" ui-sref-active="active">
+                            <i class="fa fa-dashboard fa-fw"></i> list</a>
                     </li>
                 </ul>
             </div>

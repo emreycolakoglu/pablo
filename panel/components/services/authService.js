@@ -22,6 +22,7 @@ angular.module("pablo").factory('authService', ['$rootScope', 'localStorageServi
         if (data && data.token) {
           service.isAuth = true;
           service.user = data.user;
+          service.myRoles = data.user.roles;
           localStorageService.set('panel.user', data.user);
           localStorageService.set('panel.token', data.token);
           $rootScope.$broadcast('loginCompleted');
@@ -41,7 +42,7 @@ angular.module("pablo").factory('authService', ['$rootScope', 'localStorageServi
         if (data && data.token) {
           service.isAuth = true;
           service.token = data.token;
-          service.myRoles = data.user.role;
+          service.myRoles = data.user.roles;
           localStorageService.set('panel.token', data.token);
           localStorageService.set('panel.user', data.user);
           $rootScope.$broadcast('registerCompleted');
@@ -60,7 +61,7 @@ angular.module("pablo").factory('authService', ['$rootScope', 'localStorageServi
 
     service.logout = function () {
       service.isAuth = false;
-      localStorageService.removeAll();
+      localStorageService.clearAll();
       $rootScope.$broadcast('logoutCompleted');
     };
 

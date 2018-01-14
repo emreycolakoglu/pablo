@@ -16,74 +16,48 @@ angular.module("pablo", ["oc.lazyLoad", "ui.router", "ui.bootstrap", "LocalStora
       }
     });
   }])
-  .config(['$stateProvider', '$urlRouterProvider', '$ocLazyLoadProvider',
-    function ($stateProvider, $urlRouterProvider, $ocLazyLoadProvider) {
+  .config(['$stateProvider', '$urlRouterProvider', '$ocLazyLoadProvider', 'routeListProvider',
+    function ($stateProvider, $urlRouterProvider, $ocLazyLoadProvider, routeListProvider) {
       $ocLazyLoadProvider.config({
         debug: false,
         events: true,
       });
 
+      console.log(routeListProvider.routes);
+
+      routeListProvider.routes.forEach(function (route) {
+        var newRouteObject = {
+          url: route.url
+        }
+        if (route.controller)
+          newRouteObject.controller = route.controller;
+        if (route.controllerAs)
+          newRouteObject.controllerAs = route.controllerAs;
+        if (route.templateUrl)
+          newRouteObject.templateUrl = route.templateUrl;
+        if (route.authenticate)
+          newRouteObject.authenticate = route.authenticate;
+        if (route.abstract)
+          newRouteObject.abstract = route.abstract;
+        if (route.lazyLoadFiles)
+          newRouteObject.resolve = {
+            loadMyFiles: function ($ocLazyLoad) {
+              return $ocLazyLoad.load(route.lazyLoadFiles)
+            }
+          }
+        $stateProvider.state(route.stateName, newRouteObject);
+      });
+
       $stateProvider
-        .state('login', {
-          url: '/login',
-          controller: 'loginController',
-          controllerAs: 'self',
-          templateUrl: '/asset/pages/login/login.html',
-          authenticate: false,
-          resolve: {
-            loadMyFiles: function ($ocLazyLoad) {
-              return $ocLazyLoad.load(
-                {
-                  name: 'pablo',
-                  files: [
-                    '/asset/pages/login/loginController.js',
-                    '/asset/components/services/restService.js'
-                  ]
-                })
-            }
-          }
-        })
-        .state('register', {
-          url: '/register',
-          controller: 'registerController',
-          controllerAs: 'self',
-          templateUrl: '/asset/pages/register/register.html',
-          authenticate: false,
-          resolve: {
-            loadMyFiles: function ($ocLazyLoad) {
-              return $ocLazyLoad.load(
-                {
-                  name: 'pablo',
-                  files: [
-                    '/asset/pages/register/registerController.js',
-                    '/asset/components/services/restService.js'
-                  ]
-                })
-            }
-          }
-        })
-        .state('dashboard', {
-          url: "",
+        .state('dashboard.services', {
+          url: "/services",
           abstract: true,
-          controller: "rootController",
-          controllerAs: "rootVm",
-          templateUrl: "/asset/pages/index/layout.html",
-          resolve: {
-            loadMyFiles: function ($ocLazyLoad) {
-              return $ocLazyLoad.load(
-                {
-                  name: 'pablo',
-                  files: [
-                    '/asset/pages/index/rootController.js'
-                  ]
-                })
-            }
-          }
+          template: "<ui-view/>"
         })
-        .state('dashboard.index', {
-          url: "/",
-          templateUrl: "/asset/pages/index/index.html",
-          controller: "indexController",
+        .state('dashboard.services.list', {
+          url: "/list",
+          templateUrl: "/asset/pages/services/list/listServices.html",
+          controller: "listServicesController",
           controllerAs: "self",
           authenticate: true,
           resolve: {
@@ -92,31 +66,13 @@ angular.module("pablo", ["oc.lazyLoad", "ui.router", "ui.bootstrap", "LocalStora
                 {
                   name: 'pablo',
                   files: [
-                    '/asset/pages/index/indexController.js'
+                    '/asset/pages/services/list/listServicesController.js',
+                    '/asset/components/services/restService.js'
                   ]
                 })
             }
           }
-        })
-      /*.state('dashboard.home', {
-        url: '/home',
-        controller: 'MainCtrl',
-        templateUrl: 'views/dashboard/home.html',
-        resolve: {
-          loadMyFiles: function ($ocLazyLoad) {
-            return $ocLazyLoad.load({
-              name: 'sbAdminApp',
-              files: [
-                'scripts/controllers/main.js',
-                'scripts/directives/timeline/timeline.js',
-                'scripts/directives/notifications/notifications.js',
-                'scripts/directives/chat/chat.js',
-                'scripts/directives/dashboard/stats/stats.js'
-              ]
-            })
-          }
-        }
-      })*/
+        });
 
       $urlRouterProvider.otherwise('/');
     }]);

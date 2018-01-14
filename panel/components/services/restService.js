@@ -15,6 +15,12 @@ angular.module("pablo")
       });
     };
 
+    service.getServices = function (parameters) {
+      return $http.get(serviceBase + 'services', { params: parameters }).then(function (result) {
+        return result.data;
+      });
+    };
+
     service.get = function (parameters) {
       return $http.get(serviceBase + 'api/signup?emailAddress=', { params: parameters }).then(function (result) {
         return result.data;

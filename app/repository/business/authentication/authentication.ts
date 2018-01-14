@@ -3,6 +3,7 @@ import { UserSchema } from "../../../database/mongo";
 import { IUser, IMongoUser } from "../../../database/models/index";
 import * as jwt from "jsonwebtoken";
 import * as moment from "moment";
+import logger from "../../../logger";
 
 export class Authentication {
   public static async passwordRegister(email: string, password: string) {
@@ -14,7 +15,8 @@ export class Authentication {
         UserSchema.create({
           email: email,
           password: password,
-          name: email
+          name: email,
+          roles: ["user"]
         }).then((newUser: IMongoUser) => {
           const token = this.generateToken(newUser);
           d.resolve({
@@ -61,6 +63,50 @@ export class Authentication {
     return d.promise;
   }
 
+  public static checkToken(role: string) {
+    return function (req: any, res: any, next: any) {
+      const tokenParts = req.headers["authorization"] ? req.headers["authorization"].split(" ") : [];
+      if (tokenParts.length < 2) {
+        logger.error("token yoktu");
+        res.sendStatus(403);
+      }
+      const token = tokenParts[1];
+
+      if (token) {
+        jwt.verify(token, process.env.JWTSECRET, function (err, decoded) {
+          if (err) {
+            logger.error(err.message);
+            res.send(err);
+          }
+          else {
+            // auth logic
+            try {
+              if (decoded.userid) {
+                req.userid = decoded.userid;
+              }
+              else {
+                res.sendStatus(403);
+              }
+              if (decoded.roles.indexOf(role) > -1) {
+                next();
+              }
+              else {
+                res.sendStatus(403);
+              }
+            } catch (e) {
+              logger.error(e.message);
+              res.sendStatus(500);
+            }
+          }
+        });
+      }
+      else {
+        logger.error("token yoktu");
+        res.sendStatus(403);
+      }
+    };
+  }
+
   private static async exists(email: string) {
     const d = Q.defer();
 
@@ -79,6 +125,7 @@ export class Authentication {
     const self = this;
     const payload = {
       userid: user.id,
+      roles: user.roles,
       iat: moment().unix(),
       exp: moment().add(14, "days").unix()
     };
