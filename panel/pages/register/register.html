@@ -6,10 +6,10 @@
       </div>
       <div class="panel panel-default">
         <div class="panel-heading">
-          <h3 class="panel-title">Welcome to Pablo! Please Sign In</h3>
+          <h3 class="panel-title">Welcome to Pablo! Please Register</h3>
         </div>
         <div class="panel-body">
-          <form role="form" ng-submit="self.doLogin()">
+          <form role="form" ng-submit="self.doRegister()">
             <fieldset>
               <div class="form-group">
                 <input class="form-control" placeholder="E-mail" name="email" type="email" ng-model="self.email" required autofocus>
@@ -17,10 +17,10 @@
               <div class="form-group">
                 <input class="form-control" placeholder="Password" name="password" type="password" ng-model="self.password" required value="">
               </div>
-              <button type="submit" class="btn btn-lg btn-success btn-block">Login</a>
+              <button type="submit" class="btn btn-lg btn-success btn-block">Register</a>
             </fieldset>
             <div>
-              <a ui-sref="register">Register</a>
+              <a ui-sref="login">Login</a>
             </div>
           </form>
         </div>
