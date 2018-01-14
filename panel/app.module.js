@@ -2,7 +2,7 @@ angular.module("pablo", ["oc.lazyLoad", "ui.router", "ui.bootstrap", "LocalStora
   .constant('constants', {
     apiUrl: window.location.protocol + '//localhost:3000/api/'
   })
-  .run(["$rootScope", "authService", function ($rootScope, authService) {
+  .run(["$rootScope", "authService", "$state", function ($rootScope, authService, $state) {
     authService.checkForUser();
     $rootScope.$on("$stateChangeStart", function (event, toState, toParams, fromState, fromParams) {
       if (toState.name == 'login' && authService.isAuth) {
@@ -25,7 +25,7 @@ angular.module("pablo", ["oc.lazyLoad", "ui.router", "ui.bootstrap", "LocalStora
 
       $stateProvider
         .state('login', {
-          url: '/',
+          url: '/login',
           controller: 'loginController',
           controllerAs: 'self',
           templateUrl: '/asset/pages/login/login.html',
@@ -68,7 +68,7 @@ angular.module("pablo", ["oc.lazyLoad", "ui.router", "ui.bootstrap", "LocalStora
           template: "<ui-view noanimation></ui-view>"
         })
         .state('dashboard.index', {
-          url: "/index",
+          url: "/",
           template: "<div>TEST</div>",
           authenticate: true
         })
