@@ -65,12 +65,38 @@ angular.module("pablo", ["oc.lazyLoad", "ui.router", "ui.bootstrap", "LocalStora
         .state('dashboard', {
           url: "",
           abstract: true,
-          template: "<ui-view noanimation></ui-view>"
+          controller: "rootController",
+          controllerAs: "rootVm",
+          templateUrl: "/asset/pages/index/layout.html",
+          resolve: {
+            loadMyFiles: function ($ocLazyLoad) {
+              return $ocLazyLoad.load(
+                {
+                  name: 'pablo',
+                  files: [
+                    '/asset/pages/index/rootController.js'
+                  ]
+                })
+            }
+          }
         })
         .state('dashboard.index', {
           url: "/",
-          template: "<div>TEST</div>",
-          authenticate: true
+          templateUrl: "/asset/pages/index/index.html",
+          controller: "indexController",
+          controllerAs: "self",
+          authenticate: true,
+          resolve: {
+            loadMyFiles: function ($ocLazyLoad) {
+              return $ocLazyLoad.load(
+                {
+                  name: 'pablo',
+                  files: [
+                    '/asset/pages/index/indexController.js'
+                  ]
+                })
+            }
+          }
         })
       /*.state('dashboard.home', {
         url: '/home',

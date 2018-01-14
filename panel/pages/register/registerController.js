@@ -1,17 +1,21 @@
 angular.module('pablo')
-  .controller('registerController', function ($scope, restService) {
+  .controller('registerController', ["$scope", "$state", "authService", function ($scope, $state, authService) {
     var self = this;
 
-    self.doLogin = function () {
-      restService.register({
+    self.doRegister = function () {
+      authService.register({
         email: self.email,
         password: self.password
-      }).then(function(result){
-        // TODO redirect to insides
-      }).catch(function(error){
-        toastr.error(error.data.message);
       });
-    }
+    };
+
+    $scope.$on("registerCompleted", function(){
+      $state.go("dashboard.index");
+    });
+
+    $scope.$on("registerError", function(){
+      toastr.error("An error occurred");
+    });
 
     self.test = "emre";
-  });
+  }]);

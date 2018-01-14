@@ -19,7 +19,7 @@ angular.module("pablo").factory('authService', ['$rootScope', 'localStorageServi
 
     service.login = function (req) {
       restService.login(req).then(function (data) {
-        if (data) {
+        if (data && data.token) {
           service.isAuth = true;
           service.user = data.user;
           localStorageService.set('panel.user', data.user);
@@ -38,7 +38,7 @@ angular.module("pablo").factory('authService', ['$rootScope', 'localStorageServi
 
     service.register = function (req) {
       restService.register(req).then(function (data) {
-        if (data.success) {
+        if (data && data.token) {
           service.isAuth = true;
           service.token = data.token;
           service.myRoles = data.user.role;
