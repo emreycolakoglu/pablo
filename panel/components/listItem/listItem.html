@@ -1,0 +1,11 @@
+<li ng-click="vm.listItem.collapsed = !vm.listItem.collapsed">
+  <a href="javascript:;" ng-if="vm.listItem.subRoutes">
+    <i class="fa fa-folder fa-fw"></i> {{vm.listItem.label}}
+    <span class="fa arrow" ng-class="{'fa-chevron-left': !vm.listItem.collapsed, 'fa-chevron-down': vm.listItem.collapsed}"></span>
+  </a>
+  <ul ng-if="vm.listItem.subRoutes" class="nav nav-second-level collapse" uib-collapse="!vm.listItem.collapsed">
+    <li ng-repeat="subRoute in vm.listItem.subRoutes" list-item="subRoute"></li>
+  </ul>
+  <a ng-if="!vm.listItem.subRoutes" ui-sref="{{vm.listItem.stateName}}" ui-sref-active="active">
+    <i class="fa fa-file-o fa-fw"></i> {{vm.listItem.label}}</a>
+</li>

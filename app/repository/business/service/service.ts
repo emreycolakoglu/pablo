@@ -3,11 +3,11 @@ import { ServiceSchema } from "../../../database/mongo/index";
 import * as Q from "q";
 
 export class ServiceRepository {
-  public static async create(request: any): Promise<IService> {
-    const d = Q.defer<IService>();
+  public static async create(request: any): Promise<IService[]> {
+    const d = Q.defer<IService[]>();
 
     ServiceSchema.create(request).then((newService: IMongoService[]) => {
-      d.resolve(newService[0]);
+      d.resolve(newService);
     }).catch((error: any) => {
       d.reject(error);
     });

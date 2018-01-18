@@ -21,14 +21,20 @@ angular.module("pablo")
       });
     };
 
-    service.get = function (parameters) {
-      return $http.get(serviceBase + 'api/signup?emailAddress=', { params: parameters }).then(function (result) {
+    service.get = function (url, parameters) {
+      return $http.get(serviceBase + url, { params: parameters }).then(function (result) {
         return result.data;
       });
     };
 
-    service.post = function (parameters) {
-      return $http.post(serviceBase + 'api/registerUser', parameters).then(function (result) {
+    service.delete = function (url, parameters) {
+      return $http.delete(serviceBase + url, { params: parameters }).then(function (result) {
+        return result.data;
+      });
+    };
+
+    service.post = function (url, parameters) {
+      return $http.post(serviceBase + url, parameters).then(function (result) {
         return result.data;
       });
     };

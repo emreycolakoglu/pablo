@@ -16,16 +16,23 @@ angular.module("pablo", ["oc.lazyLoad", "ui.router", "ui.bootstrap", "LocalStora
       }
     });
   }])
-  .config(['$stateProvider', '$urlRouterProvider', '$ocLazyLoadProvider', 'routeListProvider',
-    function ($stateProvider, $urlRouterProvider, $ocLazyLoadProvider, routeListProvider) {
+  .config(['$stateProvider', '$urlRouterProvider', '$ocLazyLoadProvider', 'routeListProvider', '$httpProvider',
+    function ($stateProvider, $urlRouterProvider, $ocLazyLoadProvider, routeListProvider, $httpProvider) {
       $ocLazyLoadProvider.config({
         debug: false,
         events: true,
       });
+      $httpProvider.interceptors.push('authInterceptorService');
 
-      console.log(routeListProvider.routes);
+      var registerRoutes = function (routes) {
+        if (routes && routes.length) {
+          routes.forEach(function (route) {
+            registerRoute(route);
+          })
+        }
+      };
 
-      routeListProvider.routes.forEach(function (route) {
+      var registerRoute = function (route) {
         var newRouteObject = {
           url: route.url
         }
@@ -35,6 +42,8 @@ angular.module("pablo", ["oc.lazyLoad", "ui.router", "ui.bootstrap", "LocalStora
           newRouteObject.controllerAs = route.controllerAs;
         if (route.templateUrl)
           newRouteObject.templateUrl = route.templateUrl;
+        if (route.template)
+          newRouteObject.template = route.template;
         if (route.authenticate)
           newRouteObject.authenticate = route.authenticate;
         if (route.abstract)
@@ -46,33 +55,13 @@ angular.module("pablo", ["oc.lazyLoad", "ui.router", "ui.bootstrap", "LocalStora
             }
           }
         $stateProvider.state(route.stateName, newRouteObject);
-      });
 
-      $stateProvider
-        .state('dashboard.services', {
-          url: "/services",
-          abstract: true,
-          template: "<ui-view/>"
-        })
-        .state('dashboard.services.list', {
-          url: "/list",
-          templateUrl: "/asset/pages/services/list/listServices.html",
-          controller: "listServicesController",
-          controllerAs: "self",
-          authenticate: true,
-          resolve: {
-            loadMyFiles: function ($ocLazyLoad) {
-              return $ocLazyLoad.load(
-                {
-                  name: 'pablo',
-                  files: [
-                    '/asset/pages/services/list/listServicesController.js',
-                    '/asset/components/services/restService.js'
-                  ]
-                })
-            }
-          }
-        });
+        if (route.subRoutes && route.subRoutes.length) {
+          registerRoutes(route.subRoutes);
+        }
+      };
+
+      registerRoutes(routeListProvider.routes);
 
       $urlRouterProvider.otherwise('/');
     }]);

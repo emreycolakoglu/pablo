@@ -1,9 +1,9 @@
-import { ServiceRepository } from "../repository/business/service";
-import { IMongoService } from "../database/models";
+import { ServiceActionRepository } from "../repository/business/serviceAction";
+import { IMongoServiceAction } from "../database/models";
 
 export default class ServiceController {
   public static async getList(req, res) {
-    ServiceRepository.list(req.query).then((ds: IMongoService[]) => {
+    ServiceActionRepository.list(req.query).then((ds: IMongoServiceAction[]) => {
       res.json(ds);
     }).catch((error: any) => {
       res.status(500).send({ message: error.message });
@@ -11,7 +11,7 @@ export default class ServiceController {
   }
 
   public static async getWithId(req, res) {
-    ServiceRepository.get(req.params.id).then((ds: IMongoService) => {
+    ServiceActionRepository.get(req.params.id).then((ds: IMongoServiceAction) => {
       res.json(ds);
     }).catch((error: any) => {
       res.status(500).send({ message: error.message });
@@ -19,7 +19,7 @@ export default class ServiceController {
   }
 
   public static async create(req, res) {
-    ServiceRepository.create(req.body).then((ds: IMongoService[]) => {
+    ServiceActionRepository.create(req.body).then((ds: IMongoServiceAction) => {
       res.json(ds);
     }).catch((error: any) => {
       res.status(500).send({ message: error.message });
@@ -27,7 +27,7 @@ export default class ServiceController {
   }
 
   public static async update(req, res) {
-    ServiceRepository.update(req.params.id, req.body).then((ds: IMongoService) => {
+    ServiceActionRepository.update(req.params.id, req.body).then((ds: IMongoServiceAction) => {
       res.json(ds);
     }).catch((error: any) => {
       res.status(500).send({ message: error.message });
@@ -35,7 +35,7 @@ export default class ServiceController {
   }
 
   public static async patch(req, res) {
-    ServiceRepository.patch(req.params.id, req.body).then((ds: IMongoService) => {
+    ServiceActionRepository.patch(req.params.id, req.body).then((ds: IMongoServiceAction) => {
       res.json(ds);
     }).catch((error: any) => {
       res.status(500).send({ message: error.message });
@@ -43,7 +43,7 @@ export default class ServiceController {
   }
 
   public static async delete(req, res) {
-    ServiceRepository.delete(req.params.id).then((ds: boolean) => {
+    ServiceActionRepository.delete(req.params.id).then((ds: boolean) => {
       res.json(ds);
     }).catch((error: any) => {
       res.status(500).send({ message: error.message });

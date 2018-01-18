@@ -1,6 +1,7 @@
 import AuthController from "./controllers/authController";
 import { Authentication } from "./repository/business/authentication";
 import ServiceController from "./controllers/serviceController";
+import ServiceActionController from "./controllers/serviceActionController";
 import * as express from "express";
 const routes = express.Router();
 
@@ -21,10 +22,19 @@ routes.route("/auth/register")
 routes.route("/services")
   .get(ServiceController.getList)
   .post(Authentication.checkToken("admin"), ServiceController.create);
-routes.route("/category/:id")
+routes.route("/services/:id")
   .get(ServiceController.getWithId)
   .put(Authentication.checkToken("admin"), ServiceController.update)
   .patch(Authentication.checkToken("admin"), ServiceController.patch)
   .delete(Authentication.checkToken("admin"), ServiceController.delete);
+
+routes.route("/serviceActions")
+  .get(ServiceActionController.getList)
+  .post(Authentication.checkToken("admin"), ServiceActionController.create);
+routes.route("/serviceActions/:id")
+  .get(ServiceActionController.getWithId)
+  .put(Authentication.checkToken("admin"), ServiceActionController.update)
+  .patch(Authentication.checkToken("admin"), ServiceActionController.patch)
+  .delete(Authentication.checkToken("admin"), ServiceActionController.delete);
 
 export default routes;

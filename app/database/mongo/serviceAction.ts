@@ -3,6 +3,7 @@ import { IMongoServiceAction } from "../models";
 
 const serviceActionSchema = new Schema({
   name: { type: String },
+  key: { type: String },
   inputs: [{
     name: String,
     type: Number

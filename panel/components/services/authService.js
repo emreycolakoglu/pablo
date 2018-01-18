@@ -6,8 +6,8 @@ angular.module("pablo").factory('authService', ['$rootScope', 'localStorageServi
 
     service.checkForUser = function () {
       console.log('checking for user');
-      var user = localStorageService.get('panel.user');
-      var token = localStorageService.get('panel.token');
+      var user = localStorageService.get('pablo.user');
+      var token = localStorageService.get('pablo.token');
       service.user = user;
       if (user) {
         service.isAuth = true;
@@ -23,8 +23,8 @@ angular.module("pablo").factory('authService', ['$rootScope', 'localStorageServi
           service.isAuth = true;
           service.user = data.user;
           service.myRoles = data.user.roles;
-          localStorageService.set('panel.user', data.user);
-          localStorageService.set('panel.token', data.token);
+          localStorageService.set('pablo.user', data.user);
+          localStorageService.set('pablo.token', data.token);
           $rootScope.$broadcast('loginCompleted');
         }
         else {
@@ -43,8 +43,8 @@ angular.module("pablo").factory('authService', ['$rootScope', 'localStorageServi
           service.isAuth = true;
           service.token = data.token;
           service.myRoles = data.user.roles;
-          localStorageService.set('panel.token', data.token);
-          localStorageService.set('panel.user', data.user);
+          localStorageService.set('pablo.token', data.token);
+          localStorageService.set('pablo.user', data.user);
           $rootScope.$broadcast('registerCompleted');
         }
         else {

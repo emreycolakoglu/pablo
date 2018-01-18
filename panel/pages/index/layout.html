@@ -172,14 +172,11 @@
                         </div>
                         <!-- /input-group -->
                     </li>
-                    <li>
-                        <a ui-sref="dashboard.index" ui-sref-active="active">
-                            <i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+                    
+                     <li ng-repeat="route in rootVm.routes | filter: {showOnSidebar: true}" list-item="route">
                     </li>
-                    <li>
-                        <a ui-sref="dashboard.services.list" ui-sref-active="active">
-                            <i class="fa fa-dashboard fa-fw"></i> list</a>
-                    </li>
+
+                    
                 </ul>
             </div>
             <!-- /.sidebar-collapse -->

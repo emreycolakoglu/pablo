@@ -3,6 +3,7 @@ import { IServiceActionInput } from "./iServiceActionInput";
 
 export interface IServiceAction {
   name: string;
+  key: string;
   inputs: IServiceActionInput[];
   outputs: IServiceActionInput[];
 }
