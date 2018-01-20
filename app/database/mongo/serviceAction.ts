@@ -1,17 +1,13 @@
 import { Document, Schema, model } from "mongoose";
 import { IMongoServiceAction } from "../models";
+import * as slug from "slug";
 
 const serviceActionSchema = new Schema({
   name: { type: String },
   key: { type: String },
-  inputs: [{
-    name: String,
-    type: Number
-  }],
-  outputs: [{
-    name: String,
-    type: Number
-  }],
+  service: { type: Schema.Types.ObjectId, ref: "Service" },
+  inputs: [{ type: Schema.Types.Mixed }],
+  outputs: [{ type: Schema.Types.Mixed }],
   createdAt: { type: Date, required: false },
   modifiedAt: { type: Date, required: false }
 })
@@ -19,6 +15,7 @@ const serviceActionSchema = new Schema({
     if (this._doc) {
       const doc = <IMongoServiceAction>this._doc;
       const now = new Date();
+      doc.key = slug(doc.name.toLowerCase());
       if (!doc.createdAt) {
         doc.createdAt = now;
       }

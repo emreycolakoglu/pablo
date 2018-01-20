@@ -73,6 +73,7 @@ export class ServiceRepository {
     const d = Q.defer<IService[]>();
 
     ServiceSchema.find({})
+      .populate("actions")
       .skip(query.skip)
       .limit(query.take)
       .then((result: IService[]) => {

@@ -1,6 +1,7 @@
 import AuthController from "./controllers/authController";
 import { Authentication } from "./repository/business/authentication";
 import ServiceController from "./controllers/serviceController";
+import ServiceInstanceController from "./controllers/serviceInstanceController";
 import ServiceActionController from "./controllers/serviceActionController";
 import * as express from "express";
 const routes = express.Router();
@@ -27,6 +28,15 @@ routes.route("/services/:id")
   .put(Authentication.checkToken("admin"), ServiceController.update)
   .patch(Authentication.checkToken("admin"), ServiceController.patch)
   .delete(Authentication.checkToken("admin"), ServiceController.delete);
+
+routes.route("/serviceInstances")
+  .get(ServiceInstanceController.getList)
+  .post(Authentication.checkToken("admin"), ServiceInstanceController.create);
+routes.route("/serviceInstances/:id")
+  .get(ServiceInstanceController.getWithId)
+  .put(Authentication.checkToken("admin"), ServiceInstanceController.update)
+  .patch(Authentication.checkToken("admin"), ServiceInstanceController.patch)
+  .delete(Authentication.checkToken("admin"), ServiceInstanceController.delete);
 
 routes.route("/serviceActions")
   .get(ServiceActionController.getList)

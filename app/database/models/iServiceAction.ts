@@ -1,9 +1,9 @@
-import { IBase } from "./iBase";
-import { IServiceActionInput } from "./iServiceActionInput";
+import { IService, IServiceActionInput, IBase } from "./index";
 
 export interface IServiceAction {
   name: string;
   key: string;
+  service: IService;
   inputs: IServiceActionInput[];
   outputs: IServiceActionInput[];
 }

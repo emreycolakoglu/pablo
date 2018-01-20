@@ -115,6 +115,52 @@
               }
           }
         ]
+      },
+      {
+        stateName: "dashboard.serviceActions",
+        label: "Service Actions",
+        url: "/serviceActions",
+        abstract: true,
+        showOnSidebar: true,
+        template: "<ui-view/>",
+        subRoutes: [
+          {
+            stateName: "dashboard.serviceActions.list",
+            label: "List",
+            url: "/list",
+            templateUrl: "/asset/pages/serviceActions/list/listServiceActions.html",
+            controller: "listServiceActionsController",
+            controllerAs: "self",
+            authenticate: true,
+            showOnSidebar: true,
+            lazyLoadFiles:
+              {
+                name: 'pablo',
+                files: [
+                  '/asset/pages/serviceActions/list/listServiceActionsController.js',
+                  '/asset/components/services/restService.js'
+                ]
+              }
+          },
+          {
+            stateName: "dashboard.serviceActions.create",
+            label: "Create",
+            url: "/create/:id",
+            templateUrl: "/asset/pages/serviceActions/create/createServiceActions.html",
+            controller: "createServiceActionsController",
+            controllerAs: "self",
+            authenticate: true,
+            showOnSidebar: true,
+            lazyLoadFiles:
+              {
+                name: 'pablo',
+                files: [
+                  '/asset/pages/serviceActions/create/createServiceActionsController.js',
+                  '/asset/components/services/restService.js'
+                ]
+              }
+          }
+        ]
       });
 
 

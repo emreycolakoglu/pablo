@@ -39,5 +39,17 @@ angular.module("pablo")
       });
     };
 
+    service.put = function (url, parameters) {
+      return $http.put(serviceBase + url, parameters).then(function (result) {
+        return result.data;
+      });
+    };
+
+    service.patch = function (url, parameters) {
+      return $http.patch(serviceBase + url, parameters).then(function (result) {
+        return result.data;
+      });
+    };
+
     return service;
   }]);

@@ -4,6 +4,9 @@ export interface IServiceInstance {
   serviceType: IService;
   owner: IUser;
   accessToken: string;
+  refreshToken: string;
+  username: string;
+  password: string;
 }
 
 export interface IMongoServiceInstance extends IServiceInstance, IBase { }

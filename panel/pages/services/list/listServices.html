@@ -9,6 +9,7 @@
         <tr>
           <th>Name</th>
           <th>Description</th>
+          <th>Slug</th>
           <th>Actions</th>
           <th></th>
         </tr>
@@ -17,7 +18,8 @@
         <tr ng-repeat="service in self.services">
           <td>{{service.name}}</td>
           <td>{{service.description | limitTo:40}}</td>
-          <td>{{service.actions.length}} actions</td>
+          <td>{{service.key}}</td>
+          <td>{{service.actions ? service.actions.length : 0}} actions</td>
           <td>
             <button class="btn btn-xs btn-info">Info</button>
             <button ui-sref="dashboard.services.create({id: service._id})" class="btn btn-xs btn-warning">Edit</button>
