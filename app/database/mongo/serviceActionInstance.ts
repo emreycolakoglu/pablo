@@ -4,6 +4,7 @@ import { IMongoServiceActionInstance } from "../models";
 const serviceActionInstanceSchema = new Schema({
   serviceAction: { type: Schema.Types.ObjectId, ref: "ServiceAction" },
   owner: { type: Schema.Types.ObjectId, ref: "User" },
+  payload: { type: Schema.Types.Mixed },
   createdAt: { type: Date, required: false },
   modifiedAt: { type: Date, required: false }
 })
