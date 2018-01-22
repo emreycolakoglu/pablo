@@ -7,7 +7,7 @@ import { Slack } from "./slack";
 const should = chai.should();
 
 describe("slack", function () {
-  it.only("should send stuff", function () {
+  it("should send stuff", function () {
     return Slack.send("test", "#test").then(function (result) {
       result.should.be.a("object");
     });

@@ -3,7 +3,7 @@ import * as request from "request";
 import { RedditListingEntity, RedditT3Link, RedditT1Comment } from "./";
 import logger from "../../../logger";
 
-export async function getHotListOf(source: string) {
+export async function getHotListOf(source: string): Promise<RedditT3Link[]> {
   const d = Q.defer<RedditT3Link[]>();
 
   const client = {

@@ -13,7 +13,7 @@ export class Slack {
     const slack = new slackNode();
     slack.setWebhook(webhookUri);
 
-    if(process.env.NODE_ENV == "test")
+    if (process.env.NODE_ENV == "test")
       channel = "test";
 
     const message = {
