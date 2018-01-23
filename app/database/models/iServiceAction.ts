@@ -10,6 +10,11 @@ export interface IServiceAction {
 
 export interface IMongoServiceAction extends IServiceAction, IBase { }
 
+/**
+ * input arrayinden isim kullanarak input bul
+ * @param array
+ * @param name
+ */
 export function getInputWithName(array: any[], name: string): IServiceActionInput {
   const found = array.filter((item: IServiceActionInput) => {
     return item.name == name;

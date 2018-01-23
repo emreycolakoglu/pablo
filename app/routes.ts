@@ -3,6 +3,7 @@ import { Authentication } from "./repository/business/authentication";
 import ServiceController from "./controllers/serviceController";
 import ServiceInstanceController from "./controllers/serviceInstanceController";
 import ServiceActionController from "./controllers/serviceActionController";
+import AppletController from "./controllers/appletController";
 import * as express from "express";
 const routes = express.Router();
 
@@ -46,5 +47,14 @@ routes.route("/serviceActions/:id")
   .put(Authentication.checkToken("admin"), ServiceActionController.update)
   .patch(Authentication.checkToken("admin"), ServiceActionController.patch)
   .delete(Authentication.checkToken("admin"), ServiceActionController.delete);
+
+routes.route("/applets")
+  .get(AppletController.getList)
+  .post(Authentication.checkToken("admin"), AppletController.create);
+routes.route("/applets/:id")
+  .get(AppletController.getWithId)
+  .put(Authentication.checkToken("admin"), AppletController.update)
+  .patch(Authentication.checkToken("admin"), AppletController.patch)
+  .delete(Authentication.checkToken("admin"), AppletController.delete);
 
 export default routes;

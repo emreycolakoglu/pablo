@@ -161,6 +161,52 @@
               }
           }
         ]
+      },
+      {
+        stateName: "dashboard.applets",
+        label: "Applets",
+        url: "/applets",
+        abstract: true,
+        showOnSidebar: true,
+        template: "<ui-view/>",
+        subRoutes: [
+          {
+            stateName: "dashboard.applets.list",
+            label: "List",
+            url: "/list",
+            templateUrl: "/asset/pages/applets/list/listApplets.html",
+            controller: "listAppletsController",
+            controllerAs: "self",
+            authenticate: true,
+            showOnSidebar: true,
+            lazyLoadFiles:
+              {
+                name: 'pablo',
+                files: [
+                  '/asset/pages/applets/list/listAppletsController.js',
+                  '/asset/components/services/restService.js'
+                ]
+              }
+          },
+          {
+            stateName: "dashboard.applets.create",
+            label: "Create",
+            url: "/create/:id",
+            templateUrl: "/asset/pages/applets/create/createApplets.html",
+            controller: "createAppletsController",
+            controllerAs: "self",
+            authenticate: true,
+            showOnSidebar: true,
+            lazyLoadFiles:
+              {
+                name: 'pablo',
+                files: [
+                  '/asset/pages/applets/create/createAppletsController.js',
+                  '/asset/components/services/restService.js'
+                ]
+              }
+          }
+        ]
       });
 
 

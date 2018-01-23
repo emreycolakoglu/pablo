@@ -1,8 +1,8 @@
-import { IBase, IServiceAction, IUser } from "./index";
+import { IBase, IServiceAction, IUser, IApplet } from "./index";
 
 export interface IServiceActionInstance {
   serviceAction: IServiceAction;
-  owner: IUser;
+  applet: IApplet;
   payload: any;
 }
 
