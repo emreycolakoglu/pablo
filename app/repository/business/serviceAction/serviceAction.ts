@@ -83,4 +83,19 @@ export class ServiceActionRepository {
 
     return d.promise;
   }
+
+  public static async getActionsOfService(serviceId): Promise<IServiceAction[]> {
+    const d = Q.defer<IServiceAction[]>();
+
+    ServiceActionSchema.find({
+      service: serviceId
+    })
+      .then((result: IMongoServiceAction[]) => {
+        d.resolve(result);
+      }).catch((err: any) => {
+        d.reject(err);
+      });
+
+    return d.promise;
+  }
 }

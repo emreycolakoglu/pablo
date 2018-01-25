@@ -29,6 +29,8 @@ routes.route("/services/:id")
   .put(Authentication.checkToken("admin"), ServiceController.update)
   .patch(Authentication.checkToken("admin"), ServiceController.patch)
   .delete(Authentication.checkToken("admin"), ServiceController.delete);
+routes.route("/services/:id/actions")
+  .get(ServiceActionController.getActionsOfService);
 
 routes.route("/serviceInstances")
   .get(ServiceInstanceController.getList)

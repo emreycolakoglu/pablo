@@ -10,6 +10,17 @@ angular.module('pablo')
       });
     };
 
+    self.selectService = function(service){
+      self.step = 2;
+      self.getActions(service._id);
+    };
+
+    self.getActions = function(serviceId){
+      restService.get("services/" + serviceId + "/actions", null).then(function(actions){
+        self.actions = actions;
+      });
+    };
+
     self.init = function () {
       self.getServices();
     };

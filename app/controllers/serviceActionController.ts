@@ -10,6 +10,14 @@ export default class ServiceController {
     });
   }
 
+  public static async getActionsOfService(req, res) {
+    ServiceActionRepository.getActionsOfService(req.params.id).then((ds: IMongoServiceAction[]) => {
+      res.json(ds);
+    }).catch((error: any) => {
+      res.status(500).send({ message: error.message });
+    });
+  }
+
   public static async getWithId(req, res) {
     ServiceActionRepository.get(req.params.id).then((ds: IMongoServiceAction) => {
       res.json(ds);
