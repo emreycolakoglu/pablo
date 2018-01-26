@@ -2,6 +2,7 @@ angular.module('pablo')
   .controller('createAppletsController', ["$scope", "$state", "restService", function ($scope, $state, restService) {
     var self = this;
     self.services = [];
+    self.selectedService = {};
     self.step = 1;
 
     self.getServices = function(){
@@ -11,9 +12,21 @@ angular.module('pablo')
     };
 
     self.selectService = function(service){
-      self.step = 2;
-      self.getActions(service._id);
+      self.selectedService = service;
+      if(self.selectedService.requireAuth){
+        self.step = 2;
+      }
+      else{
+        self.step = 3;
+        self.getActions(self.selectedService._id);
+      }
+      
     };
+
+    self.saveServiceUserPassCredentials = function(){
+      self.step = 3;
+      self.getActions(self.selectedService._id);
+    }
 
     self.getActions = function(serviceId){
       restService.get("services/" + serviceId + "/actions", null).then(function(actions){
