@@ -2,53 +2,98 @@
   <div class="col-lg-12">
     <h1 class="page-header">Create Applet</h1>
   </div>
-  <!-- /.col-lg-12 -->
-  <div ng-show="self.step == 1">
-    <div class="col-xs-12">
-      <div class="form-group">
-        <input type="text" class="form-control" ng-model="self.searchFilter" placeholder="Search">
-      </div>
-    </div>
-    <div class="col-xs-12">
-      <div class="row">
-        <div class="col-xs-3" style="margin-top:15px" ng-repeat="service in self.services | orderBy: 'name' | filter: {name: self.searchFilter}">
-          <button class="btn btn-primary btn-block" ng-click="self.selectService(service)">{{service.name}}</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div ng-show="self.step == 2">
-    <div class="col-xs-12">
-      <h3>Add Account</h3>
-      <div class="row">
-        <form class="form col-xs-12" name="userpassform" ng-if="self.selectedService.authenticationMethod == 1" ng-submit="self.saveServiceUserPassCredentials()">
+
+  <div class="row">
+    <div class="col-md-9">
+      <div ng-show="self.step == 0">
+        <form class="col-xs-12" name="appletForm" ng-submit="self.saveApplet()">
           <div class="form-group">
-            <label>Username</label>
-            <input type="text" class="form-control" required>
+            <label>Name</label>
+            <input type="text" class="form-control" ng-model="self.applet.name" required>
           </div>
           <div class="form-group">
-            <label>Password</label>
-            <input type="text" class="form-control" required>
+            <label>Interval</label>
+            <input type="number" class="form-control" ng-model="self.applet.interval" required>
           </div>
-          <div>
-            <button class="btn btn-primary btn-block" type="submit">Save</button>
-          </div>
+          <button class="btn btn-primary btn-block" type="submit">Save</button>
         </form>
-        <div class="col-xs-12" ng-if="self.selectedService.authenticationMethod == 2">
-          <div>
-            <button class="btn btn-info btn-block" type="submit">Authorize</button>
+      </div>
+      <div ng-show="self.step == 1">
+        <div class="col-xs-12">
+          <div class="form-group">
+            <input type="text" class="form-control" ng-model="self.searchFilter" placeholder="Search">
+          </div>
+        </div>
+        <div class="col-xs-12">
+          <div class="row">
+            <div class="col-xs-3" style="margin-top:15px" ng-repeat="service in self.services | orderBy: 'name' | filter: {name: self.searchFilter}">
+              <button class="btn btn-primary btn-block" ng-click="self.selectService(service)">{{service.name}}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div ng-show="self.step == 2">
+        <div class="col-xs-12">
+          <h3>Add Account</h3>
+          <div class="row">
+            <form class="form col-xs-12" name="userpassform" ng-if="self.selectedService.authenticationMethod == 1" ng-submit="self.saveServiceUserPassCredentials()">
+              <div class="form-group">
+                <label>Username</label>
+                <input type="text" class="form-control" required>
+              </div>
+              <div class="form-group">
+                <label>Password</label>
+                <input type="text" class="form-control" required>
+              </div>
+              <div>
+                <button class="btn btn-primary btn-block" type="submit">Save</button>
+              </div>
+            </form>
+            <div class="col-xs-12" ng-if="self.selectedService.authenticationMethod == 2">
+              <div>
+                <button class="btn btn-info btn-block" type="submit">Authorize</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div ng-show="self.step == 3">
+        <div class="col-xs-12">
+          <div class="row">
+            <div class="col-xs-3" style="margin-top:15px" ng-repeat="action in self.actions | orderBy: 'name'">
+              <button class="btn btn-primary btn-block" ng-click="self.selectAction(action)">{{action.name}}</button>
+            </div>
+            <div class="col-xs-12" ng-if="self.actions && self.actions.length == 0">
+              No actions found
+            </div>
+          </div>
+        </div>
+      </div>
+      <div ng-show="self.step == 4">
+        <div class="col-xs-12">
+          <h3>Prepare Inputs</h3>
+          <div class="row">
+            <form name="inputForm" class="form col-xs-12" ng-submit="self.saveInputs()">
+              <div class="form-group" ng-repeat="input in self.selectedAction.inputs">
+                <label>{{input.name}}</label>
+                <input type="text" class="form-control" ng-model="input.selectedValue" required>
+              </div>
+              <button class="btn btn-primary btn-block" type="submit">Save</button>
+            </form>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  <div ng-show="self.step == 3">
-    <div class="col-xs-12">
-      <div class="row">
-        <div class="col-xs-3" style="margin-top:15px" ng-repeat="action in self.actions | orderBy: 'name'">
-          <button class="btn btn-primary btn-block">{{action.name}}</button>
+    <div class="col-md-3">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">{{self.applet.name}}</h3>
+        </div>
+        <div class="panel-body">
+          <p ng-if="self.applet.interval">Interval: {{self.applet.interval}} sn</p>
         </div>
       </div>
     </div>
   </div>
+
 </div>
