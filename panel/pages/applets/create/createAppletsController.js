@@ -1,7 +1,12 @@
 angular.module('pablo')
-  .controller('createAppletsController', ["$scope", "$state", "restService", function ($scope, $state, restService) {
+  .controller('createAppletsController', ["$scope", "$state", "restService", "authService", function ($scope, $state, restService, authService) {
     var self = this;
-    self.applet = {};
+    self.applet = {
+      name: '',
+      interval: undefined,
+      owner: authService.user._id,
+      actions: []
+    };
     self.services = [];
     self.selectedService = {};
     self.selectedAction = {};
@@ -49,23 +54,31 @@ angular.module('pablo')
       }
     };
 
-    self.saveInputs = function(){
-      self.saveActionToApplet(self.convertActionToInstance(action));
+    self.saveInputs = function () {
+      self.saveActionToApplet(self.convertActionToInstance(self.selectedAction));
+      self.selectedAction = undefined;
+      self.step = 1;
     };
 
-    self.convertActionToInstance = function(action){
-      var payload = {};
-      
+    self.convertActionToInstance = function (action) {
       return {
-        serviceAction = action._id,
-        payload: payload
+        serviceAction: action,
+        inputs: action.inputs
       }
     };
 
-    self.saveActionToApplet = function(action){
-      self.applet.inputs = self.applet.inputs || [];
-      self.applet.inputs.push(action);
+    self.saveActionToApplet = function (action) {
+      self.applet.actions = self.applet.actions ||  [];
+      self.applet.actions.push(action);
     };
+
+    self.save = function () {
+      /**
+       * TODO
+       * applet kaydet
+       * applet id ile action kaydet
+       */
+    }
 
     self.init = function () {
       self.getServices();
