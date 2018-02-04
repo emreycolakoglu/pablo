@@ -97,12 +97,13 @@
               <div class="form-group" ng-repeat="input in self.selectedAction.inputs">
                 <label>{{input.name}}</label>
                 <input type="text" class="form-control" ng-model="input.selectedValue" required>
-                <div ng-if="self.getLastActionsOutputs().length == 0">
-                  <select class="form-control" ng-model="self.dummy" ng-options="output.name as output.slug for output in self.getLastActionOutputs()">
+                <div ng-if="self.applet.actions[self.applet.actions.length - 1].serviceAction.outputs.length > 0">
+                  <select class="form-control" ng-model="self.dummy" ng-options="output.name as output.name for output in self.applet.actions[self.applet.actions.length - 1].serviceAction.outputs">
                     <option selected disabled>Select output from last action</option>
                   </select>
                 </div>
               </div>
+              <pre>{{self.applet.actions[self.applet.actions.length - 1].serviceAction.outputs | json}}</pre>
               <button class="btn btn-primary btn-block" type="submit">Save</button>
             </form>
           </div>
@@ -128,6 +129,11 @@
           <button class="btn btn-success">Save</button>
         </div>
       </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <pre>{{self.applet | json}}</pre>
     </div>
   </div>
 

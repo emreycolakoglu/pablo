@@ -72,12 +72,6 @@ angular.module('pablo')
       self.applet.actions.push(action);
     };
 
-    self.getLastActionsOutputs = function () {
-      if (!self.applet.actions || self.applet.actions.length == 0)
-        return [];
-      return self.applet.actions[self.applet.actions.length - 1].serviceAction.outputs;
-    }
-
     self.save = function () {
       /**
        * TODO
