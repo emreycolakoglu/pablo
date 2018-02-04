@@ -72,6 +72,10 @@ angular.module('pablo')
       self.applet.actions.push(action);
     };
 
+    self.getLastActionsOutputs = function(){
+      return [];
+    }
+
     self.save = function () {
       /**
        * TODO
