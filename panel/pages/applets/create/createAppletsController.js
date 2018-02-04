@@ -68,12 +68,14 @@ angular.module('pablo')
     };
 
     self.saveActionToApplet = function (action) {
-      self.applet.actions = self.applet.actions ||  [];
+      self.applet.actions = self.applet.actions || [];
       self.applet.actions.push(action);
     };
 
-    self.getLastActionsOutputs = function(){
-      return [];
+    self.getLastActionsOutputs = function () {
+      if (!self.applet.actions || self.applet.actions.length == 0)
+        return [];
+      return self.applet.actions[self.applet.actions.length - 1].serviceAction.outputs;
     }
 
     self.save = function () {

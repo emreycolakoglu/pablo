@@ -96,29 +96,11 @@
             <form name="inputForm" class="form col-xs-12" ng-submit="self.saveInputs()">
               <div class="form-group" ng-repeat="input in self.selectedAction.inputs">
                 <label>{{input.name}}</label>
-                <div class="input-group">
-                  <input type="text" class="form-control" ng-model="input.selectedValue" required>
-
-                  <div class="input-group-btn" ng-if="self.getLastActionsOutputs().length == 0">
-                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action
-                      <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-right">
-                      <li>
-                        <a href="#">Action</a>
-                      </li>
-                      <li>
-                        <a href="#">Another action</a>
-                      </li>
-                      <li>
-                        <a href="#">Something else here</a>
-                      </li>
-                      <li role="separator" class="divider"></li>
-                      <li>
-                        <a href="#">Separated link</a>
-                      </li>
-                    </ul>
-                  </div>
+                <input type="text" class="form-control" ng-model="input.selectedValue" required>
+                <div ng-if="self.getLastActionsOutputs().length == 0">
+                  <select class="form-control" ng-model="self.dummy" ng-options="output.name as output.slug for output in self.getLastActionOutputs()">
+                    <option selected disabled>Select output from last action</option>
+                  </select>
                 </div>
               </div>
               <button class="btn btn-primary btn-block" type="submit">Save</button>
