@@ -9,6 +9,7 @@ const serviceInstanceSchema = new Schema({
   refreshToken: { type: String },
   username: { type: String },
   password: { type: String },
+  endpoint: { type: String },
   createdAt: { type: Date, required: false },
   modifiedAt: { type: Date, required: false }
 })

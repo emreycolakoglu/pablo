@@ -7,6 +7,7 @@ export interface IServiceInstance {
   refreshToken: string;
   username: string;
   password: string;
+  endpoint: string;
 }
 
 export interface IMongoServiceInstance extends IServiceInstance, IBase { }

@@ -49,6 +49,10 @@
                 <label>Password</label>
                 <input type="text" class="form-control" required>
               </div>
+              <div class="form-group">
+                <label>Endpoint</label>
+                <input type="text" class="form-control" required>
+              </div>
               <div>
                 <button class="btn btn-primary btn-block" type="submit">Save</button>
               </div>
@@ -96,9 +100,9 @@
             <form name="inputForm" class="form col-xs-12" ng-submit="self.saveInputs()">
               <div class="form-group" ng-repeat="input in self.selectedAction.inputs">
                 <label>{{input.name}}</label>
-                <input type="text" class="form-control" ng-model="input.selectedValue" required>
+                <textarea class="form-control" ng-model="input.selectedValue" required></textarea>
                 <div ng-if="self.applet.actions[self.applet.actions.length - 1].serviceAction.outputs.length > 0">
-                  <select class="form-control" ng-model="self.dummy" ng-options="output.name as output.name for output in self.applet.actions[self.applet.actions.length - 1].serviceAction.outputs">
+                  <select class="form-control" ng-model="input.helper" ng-options="output.name as output.name for output in self.applet.actions[self.applet.actions.length - 1].serviceAction.outputs" ng-change="input.selectedValue = input.selectedValue + ' ' + '{' + input.helper + '}'">
                     <option selected disabled>Select output from last action</option>
                   </select>
                 </div>
@@ -110,6 +114,7 @@
         </div>
       </div>
     </div>
+    <!-- sidebar -->
     <div class="col-md-3">
       <div class="panel panel-default">
         <div class="panel-heading">
@@ -126,7 +131,7 @@
         </div>
         <div class="panel-footer">
           <button class="btn btn-warning">Clear All</button>
-          <button class="btn btn-success">Save</button>
+          <button class="btn btn-success" ng-click="self.save()">Save</button>
         </div>
       </div>
     </div>

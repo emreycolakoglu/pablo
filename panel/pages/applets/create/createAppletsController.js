@@ -3,7 +3,7 @@ angular.module('pablo')
     var self = this;
     self.applet = {
       name: '',
-      interval: undefined,
+      interval: 3600,
       owner: authService.user._id,
       actions: []
     };
@@ -78,6 +78,35 @@ angular.module('pablo')
        * applet kaydet
        * applet id ile action kaydet
        */
+
+      restService.post("applets", {
+        name: self.applet.name,
+        interval: self.applet.interval,
+        inProgress: false,
+        owner: self.applet.owner
+      }).then(function(appletCreateResult){
+        console.log("applet created", appletCreateResult);
+        self.applet.actions.map(function(action, index){
+          //bagladigi hesaplari yarat
+          restService.post("serviceInstances", {
+            serviceType: action.serviceAction.service,
+            owner: self.applet.owner,
+            accessToken: "",
+            refreshToken: "",
+            username: "",
+            password: ""
+          }).then(function(serviceInstanceCreateResult){
+            //o servisin aksiyonunu yarat
+            restService.post("serviceActions", {
+              serviceAction: action.serviceAction._id,
+              applet: appletCreateResult._id,
+              inputs: action.serviceAction.inputs
+            });
+          });
+        });
+      }).catch(function(error){
+        window.toastr.error(error);
+      });
     }
 
     self.init = function () {
