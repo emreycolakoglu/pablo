@@ -5,6 +5,8 @@ const serviceActionInstanceSchema = new Schema({
   serviceAction: { type: Schema.Types.ObjectId, ref: "ServiceAction" },
   applet: { type: Schema.Types.ObjectId, ref: "Applet" },
   payload: { type: Schema.Types.Mixed },
+  inputs: [{ type: Schema.Types.Mixed }],
+  outputs: [{ type: Schema.Types.Mixed }],
   createdAt: { type: Date, required: false },
   modifiedAt: { type: Date, required: false }
 })

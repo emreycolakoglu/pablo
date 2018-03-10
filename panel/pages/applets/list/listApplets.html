@@ -15,8 +15,8 @@
         <tr ng-repeat="applets in self.applets">
           <td>{{applets.name}}</td>
           <td>
-            <button ui-sref="dashboard.services.create({id: service._id})" class="btn btn-xs btn-warning">Edit</button>
-            <button ng-click="self.delete(service)" class="btn btn-xs btn-danger">Delete</button>
+            <button ui-sref="dashboard.services.create({id: applets._id})" class="btn btn-xs btn-warning">Edit</button>
+            <button ng-click="self.delete(applets)" class="btn btn-xs btn-danger">Delete</button>
           </td>
         </tr>
       </tbody>

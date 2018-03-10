@@ -3,10 +3,17 @@ import { AppletSchema } from "../../../database/mongo";
 import * as Q from "q";
 
 export class AppletRepository {
-  public static async create(request: any): Promise<IApplet[]> {
-    const d = Q.defer<IApplet[]>();
+  public static async create(request: IApplet): Promise<IApplet> {
+    const d = Q.defer<IApplet>();
 
-    AppletSchema.create(request).then((newService: IMongoApplet[]) => {
+    if (!request.lastRunDate) {
+      const now = new Date();
+      request.lastRunDate = now;
+      now.setSeconds(now.getSeconds() + request.interval);
+      request.nextRunDate = now;
+    }
+
+    AppletSchema.create(request).then((newService: IMongoApplet) => {
       d.resolve(newService);
     }).catch((error: any) => {
       d.reject(error);

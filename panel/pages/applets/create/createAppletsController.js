@@ -69,6 +69,10 @@ angular.module('pablo')
 
     self.saveActionToApplet = function (action) {
       self.applet.actions = self.applet.actions || [];
+      if(self.tempAuthData){
+        action.serviceAction.auth = angular.copy(self.tempAuthData);
+        self.tempAuthData = undefined;
+      }
       self.applet.actions.push(action);
     };
 
@@ -91,13 +95,14 @@ angular.module('pablo')
           restService.post("serviceInstances", {
             serviceType: action.serviceAction.service,
             owner: self.applet.owner,
-            accessToken: "",
-            refreshToken: "",
-            username: "",
-            password: ""
+            accessToken: undefined,
+            refreshToken: undefined,
+            username: action.serviceAction.auth ? action.serviceAction.auth.username : undefined,
+            password: action.serviceAction.auth ? action.serviceAction.auth.password : undefined,
+            endpoint: action.serviceAction.auth ? action.serviceAction.auth.endpoint : undefined
           }).then(function(serviceInstanceCreateResult){
             //o servisin aksiyonunu yarat
-            restService.post("serviceActions", {
+            restService.post("serviceActionInstances", {
               serviceAction: action.serviceAction._id,
               applet: appletCreateResult._id,
               inputs: action.serviceAction.inputs
@@ -107,7 +112,21 @@ angular.module('pablo')
       }).catch(function(error){
         window.toastr.error(error);
       });
-    }
+    };
+
+    self.reset =  function(){
+      self.applet = {
+        name: '',
+        interval: 3600,
+        owner: authService.user._id,
+        actions: []
+      };
+      self.services = [];
+      self.selectedService = {};
+      self.selectedAction = {};
+      self.step = 0;
+      self.init();
+    };
 
     self.init = function () {
       self.getServices();

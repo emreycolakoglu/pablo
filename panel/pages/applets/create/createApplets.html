@@ -35,7 +35,6 @@
         </div>
       </div>
       <!-- auth -->
-      <!-- TODO AUTH BAGLA -->
       <div ng-show="self.step == 2">
         <div class="col-xs-12">
           <h3>Add Account</h3>
@@ -43,15 +42,15 @@
             <form class="form col-xs-12" name="userpassform" ng-if="self.selectedService.authenticationMethod == 1" ng-submit="self.saveServiceUserPassCredentials()">
               <div class="form-group">
                 <label>Username</label>
-                <input type="text" class="form-control" required>
+                <input type="text" class="form-control" ng-model="self.tempAuthData.username" required>
               </div>
               <div class="form-group">
                 <label>Password</label>
-                <input type="text" class="form-control" required>
+                <input type="text" class="form-control" ng-model="self.tempAuthData.password" required>
               </div>
               <div class="form-group">
                 <label>Endpoint</label>
-                <input type="text" class="form-control" required>
+                <input type="text" class="form-control" ng-model="self.tempAuthData.endpoint" required>
               </div>
               <div>
                 <button class="btn btn-primary btn-block" type="submit">Save</button>
@@ -75,7 +74,7 @@
       <div ng-show="self.step == 3">
         <div class="col-xs-12">
           <div class="row">
-            <div class="col-xs-3" style="margin-top:15px" ng-repeat="action in self.actions | orderBy: 'name'">
+            <div class="col-xs-6" style="margin-top:15px" ng-repeat="action in self.actions | orderBy: 'name'">
               <button class="btn btn-primary btn-block" ng-click="self.selectAction(action)">{{action.name}}</button>
             </div>
             <div class="col-xs-12" style="margin-top:15px" ng-if="self.actions.length > 0">
@@ -102,12 +101,11 @@
                 <label>{{input.name}}</label>
                 <textarea class="form-control" ng-model="input.selectedValue" required></textarea>
                 <div ng-if="self.applet.actions[self.applet.actions.length - 1].serviceAction.outputs.length > 0">
-                  <select class="form-control" ng-model="input.helper" ng-options="output.name as output.name for output in self.applet.actions[self.applet.actions.length - 1].serviceAction.outputs" ng-change="input.selectedValue = input.selectedValue + ' ' + '{' + input.helper + '}'">
+                  <select class="form-control" ng-model="input.helper" ng-options="output.name as output.name for output in self.applet.actions[self.applet.actions.length - 1].serviceAction.outputs" ng-change="input.selectedValue = input.selectedValue + '{' + input.helper + '}'">
                     <option selected disabled>Select output from last action</option>
                   </select>
                 </div>
               </div>
-              <pre>{{self.applet.actions[self.applet.actions.length - 1].serviceAction.outputs | json}}</pre>
               <button class="btn btn-primary btn-block" type="submit">Save</button>
             </form>
           </div>
@@ -130,15 +128,10 @@
           </div>
         </div>
         <div class="panel-footer">
-          <button class="btn btn-warning">Clear All</button>
+          <button class="btn btn-warning" ng-click="self.reset()">Clear All</button>
           <button class="btn btn-success" ng-click="self.save()">Save</button>
         </div>
       </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-xs-12">
-      <pre>{{self.applet | json}}</pre>
     </div>
   </div>
 
