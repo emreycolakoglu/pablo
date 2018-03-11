@@ -19,7 +19,7 @@ export default class ServiceController {
   }
 
   public static async create(req, res) {
-    ServiceRepository.create(req.body).then((ds: IMongoService[]) => {
+    ServiceRepository.create(req.body).then((ds: IMongoService) => {
       res.json(ds);
     }).catch((error: any) => {
       res.status(500).send({ message: error.message });

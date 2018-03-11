@@ -19,7 +19,7 @@ export default class AppletController  {
   }
 
   public static async create(req, res) {
-    AppletRepository.create(req.body).then((ds: IMongoApplet[]) => {
+    AppletRepository.create(req.body).then((ds: IMongoApplet) => {
       res.json(ds);
     }).catch((error: any) => {
       res.status(500).send({ message: error.message });

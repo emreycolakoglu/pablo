@@ -6,8 +6,8 @@ export class ServiceActionRepository {
   public static async create(request: any): Promise<IServiceAction> {
     const d = Q.defer<IServiceAction>();
 
-    ServiceActionSchema.create(request).then((newService: IMongoServiceAction[]) => {
-      d.resolve(newService[0]);
+    ServiceActionSchema.create(request).then((newService: IMongoServiceAction) => {
+      d.resolve(newService);
     }).catch((error: any) => {
       d.reject(error);
     });

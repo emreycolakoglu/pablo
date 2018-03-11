@@ -6,8 +6,8 @@ export class ServiceInstanceRepository {
   public static async create(request: any): Promise<IServiceInstance> {
     const d = Q.defer<IServiceInstance>();
 
-    ServiceInstanceSchema.create(request).then((newService: IMongoServiceInstance[]) => {
-      d.resolve(newService[0]);
+    ServiceInstanceSchema.create(request).then((newService: IMongoServiceInstance) => {
+      d.resolve(newService);
     }).catch((error: any) => {
       d.reject(error);
     });
