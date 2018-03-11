@@ -11,14 +11,14 @@ export class StumbleUpon {
       HOMEPAGE: "https://www.stumbleupon.com",
       LOGINPAGE: "https://www.stumbleupon.com/login",
       SUBMITPAGE: "http://www.stumbleupon.com/submit"
-    }
+    };
   }
   private _username: string;
   private _password: string;
   private _cookieJar: request.CookieJar;
   private _urls: any;
 
-  public postToStumbleUpon(link: string, cat: string, message: string = "", nsfw: boolean = false, tags: any = null) {
+  public postToStumbleUpon(link: string, cat: string, message: string = "", nsfw: boolean = false, tags: any = undefined) {
     const d = Q.defer();
     const self = this;
 
@@ -39,9 +39,9 @@ export class StumbleUpon {
 
   /**
    * header yarat
-   * @param referrer 
-   * @param post 
-   * @param ajax 
+   * @param referrer
+   * @param post
+   * @param ajax
    */
   private getHeaders(referrer: string, post: boolean = false, ajax: boolean = false): any {
     const headers: any = {};
@@ -69,22 +69,22 @@ export class StumbleUpon {
 
   /**
    * cheerio ile data çıkarır
-   * @param body 
-   * @param selector 
+   * @param body
+   * @param selector
    */
   private extractData(body: string, selector: string) {
     let $ = cheerio.load(body);
-    let value = $(selector).val();
+    const value = $(selector).val();
     $ = undefined;
     return value;
   }
 
   /**
    * requestjs requesti için config hazırlar
-   * @param method 
-   * @param url 
-   * @param headers 
-   * @param fields 
+   * @param method
+   * @param url
+   * @param headers
+   * @param fields
    */
   private getRequestOptions(method: string, url: string, headers: any, fields: any) {
     const options = {
@@ -93,7 +93,7 @@ export class StumbleUpon {
       headers: headers,
       form: fields,
       jar: this._cookieJar
-    }
+    };
     return options;
   }
 
@@ -102,7 +102,7 @@ export class StumbleUpon {
     const self = this;
 
     const pageHeaders = self.getHeaders(self._urls.LOGINPAGE, false, false);
-    const pageRequestOptions = self.getRequestOptions("GET", self._urls.LOGINPAGE, pageHeaders, null);
+    const pageRequestOptions = self.getRequestOptions("GET", self._urls.LOGINPAGE, pageHeaders, undefined);
 
     request(pageRequestOptions, function (error, response, body) {
       if (error) {
@@ -120,8 +120,8 @@ export class StumbleUpon {
           "_action": "auth",
           "_method": "create"
         };
-        let loginRequestHeaders = self.getHeaders(self._urls.LOGINPAGE, true, true);
-        let loginRequestOptions = self.getRequestOptions("POST", self._urls.LOGINPAGE, loginRequestHeaders, fields);
+        const loginRequestHeaders = self.getHeaders(self._urls.LOGINPAGE, true, true);
+        const loginRequestOptions = self.getRequestOptions("POST", self._urls.LOGINPAGE, loginRequestHeaders, fields);
 
         request(loginRequestOptions, function (error, response, body) {
           if (error) {
@@ -130,27 +130,27 @@ export class StumbleUpon {
           else {
             d.resolve(body);
           }
-        })
+        });
       }
     });
 
     return d.promise;
   }
 
-  private post(link: string, cat: string, message: string = "", nsfw: boolean = false, tags: any = null): Q.Promise<string> {
+  private post(link: string, cat: string, message: string = "", nsfw: boolean = false, tags: any = undefined): Q.Promise<string> {
     const d = Q.defer<string>();
     const self = this;
 
-    let postPageHeaders = self.getHeaders(self._urls.SUBMITPAGE, false, false);
-    let postPageOptions = self.getRequestOptions("GET", self._urls.SUBMITPAGE, postPageHeaders, null);
+    const postPageHeaders = self.getHeaders(self._urls.SUBMITPAGE, false, false);
+    const postPageOptions = self.getRequestOptions("GET", self._urls.SUBMITPAGE, postPageHeaders, undefined);
 
     request(postPageOptions, function (error, response, body) {
       if (error) {
         d.reject(error);
       }
       else {
-        let postPageToken = self.extractData(body, "input[name='_token']");
-        let fields = {
+        const postPageToken = self.extractData(body, "input[name='_token']");
+        const fields = {
           "url": link,
           "_token": postPageToken,
           "_output": "Json",
@@ -164,8 +164,8 @@ export class StumbleUpon {
           "user-tags": tags
         };
 
-        let postRequesHeaders = self.getHeaders(self._urls.SUBMITPAGE, true, true);
-        let postRequestOptions = self.getRequestOptions("POST", self._urls.SUBMITPAGE, postRequesHeaders, fields);
+        const postRequesHeaders = self.getHeaders(self._urls.SUBMITPAGE, true, true);
+        const postRequestOptions = self.getRequestOptions("POST", self._urls.SUBMITPAGE, postRequesHeaders, fields);
         request(postRequestOptions, function (error, response, body) {
           if (error) {
             d.reject(error);
