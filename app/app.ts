@@ -7,7 +7,7 @@ import * as helmet from "helmet";
 import * as compression from "compression";
 import routes from "./routes";
 import * as cors from "cors";
-// import * as tasks from "./helpers/taskRunner";
+import { Engine } from "./repository/business/engine";
 import logger from "./logger";
 // Creates and configures an ExpressJS web server.
 class App {
@@ -62,7 +62,7 @@ class App {
   }
 
   private postInitSetup() {
-    // tasks.scheduleAll();
+    Engine.start();
   }
 }
 

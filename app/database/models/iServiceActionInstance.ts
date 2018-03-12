@@ -7,6 +7,7 @@ export interface IServiceActionInstance {
   payload: any;
   inputs: IServiceActionInput[];
   outputs: IServiceActionInput[];
+  order: number;
 }
 
 export interface IMongoServiceActionInstance extends IServiceActionInstance, IBase { }

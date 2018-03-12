@@ -7,6 +7,7 @@ const serviceActionInstanceSchema = new Schema({
   payload: { type: Schema.Types.Mixed },
   inputs: [{ type: Schema.Types.Mixed }],
   outputs: [{ type: Schema.Types.Mixed }],
+  order: { type: Number },
   createdAt: { type: Date, required: false },
   modifiedAt: { type: Date, required: false }
 })
