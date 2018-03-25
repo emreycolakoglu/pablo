@@ -2,7 +2,9 @@ import * as moment from "moment";
 import * as Q from "q";
 import * as scheduler from "node-schedule";
 import logger from "../../../logger";
-import { AppletSchema } from "../../../database/mongo";
+import { AppletSchema, ServiceActionInstanceSchema } from "../../../database/mongo";
+import { IServiceActionInstance } from "../../../database/models";
+import { RedditRepository } from "../reddit";
 
 export class Engine {
 
@@ -42,27 +44,70 @@ export class Engine {
       })
       .exec(function (err, applets) {
         if (!err) {
+          logger.debug(`found ${applets.length} applets to run this cycle`);
           applets.forEach(function (applet) {
-            /*applet.lastRunDate = new Date();
+            logger.debug(`running ${applet.name}`);
+            applet.lastRunDate = new Date();
             applet.inProgress = true;
             applet.nextRunDate = moment().add(applet.interval, "s").toDate();
             applet.save();
 
-            handleSteps(applet.steps)
+            this.chainActions(applet.actions)
               .then(function (result) {
-                Slack.send(`${applet.name} finished succesfully`, "status");
+                logger.info(`${applet.name} finished succesfully`);
                 applet.inProgress = false;
                 applet.save();
               }, function (reason) {
                 applet.inProgress = false;
                 logger.error(reason);
-                Slack.send(`${applet.name} finished with errors ${reason}`, "status");
                 applet.save();
-              });*/
-              logger.debug("got: " + applet.name);
+              });
+            logger.debug(`got: ${applet.name}, ${applet.lastRunDate}, ${applet.nextRunDate}`);
           }, this);
         }
       });
+
+    return d.promise;
+  }
+
+  public static async chainActions(actions: IServiceActionInstance[]) {
+    const d = Q.defer();
+
+    ServiceActionInstanceSchema.populate(actions, [{
+      path: "serviceAction"
+    }, {
+      path: "applet"
+    }])
+      .then(function (actions: IServiceActionInstance[]) {
+        logger.info(`${actions.length}, actions found, chaining`);
+        const chain = actions.reduce(function (previous, item) {
+          return previous.then(function (previousValue) {
+            logger.info("a previous action is done, calling the next");
+            return this.handleAction(item, previousValue);
+          });
+        }, Q.resolve({}));
+      });
+
+    return d.promise;
+  }
+
+  public static async handleAction(action: IServiceActionInstance, previousAction: IServiceActionInstance) {
+    const d = Q.defer();
+    logger.info(`handle action: ${action.serviceAction.name}`);
+    switch (action.serviceAction.name) {
+      /*case "Reddit":
+        reddit.handleRedditStep(action, previousAction).then(function (result) {
+          logger.info("handle step:", action.serviceAction.name, action.name, "step is complete, resolving");
+          d.resolve(result);
+        }, function (reason) {
+          logger.info("handle step:", action.serviceAction.name, action.name, "step has errors, rejecting");
+          d.reject(reason);
+        });
+        break;*/
+      default:
+        d.resolve({});
+        break;
+    }
 
     return d.promise;
   }
