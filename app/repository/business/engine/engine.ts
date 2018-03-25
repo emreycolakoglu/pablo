@@ -2,8 +2,9 @@ import * as moment from "moment";
 import * as Q from "q";
 import * as scheduler from "node-schedule";
 import logger from "../../../logger";
+import { ActionRepository } from "./";
 import { AppletSchema, ServiceActionInstanceSchema } from "../../../database/mongo";
-import { IServiceActionInstance } from "../../../database/models";
+import { IServiceActionInstance, IMongoServiceActionInstance } from "../../../database/models";
 import { RedditRepository } from "../reddit";
 
 export class Engine {
@@ -32,6 +33,7 @@ export class Engine {
 
   public static async cycle(): Promise<any> {
     const d = Q.defer();
+    const self = this;
 
     AppletSchema
       .find({
@@ -47,12 +49,12 @@ export class Engine {
           logger.debug(`found ${applets.length} applets to run this cycle`);
           applets.forEach(function (applet) {
             logger.debug(`running ${applet.name}`);
-            applet.lastRunDate = new Date();
+            /*applet.lastRunDate = new Date();
             applet.inProgress = true;
             applet.nextRunDate = moment().add(applet.interval, "s").toDate();
-            applet.save();
+            applet.save();*/
 
-            this.chainActions(applet.actions)
+            self.chainActions(applet.actions)
               .then(function (result) {
                 logger.info(`${applet.name} finished succesfully`);
                 applet.inProgress = false;
@@ -72,40 +74,44 @@ export class Engine {
 
   public static async chainActions(actions: IServiceActionInstance[]) {
     const d = Q.defer();
+    const self = this;
 
     ServiceActionInstanceSchema.populate(actions, [{
-      path: "serviceAction"
+      path: "serviceAction",
+      populate: {
+        path: "service"
+      }
     }, {
       path: "applet"
     }])
-      .then(function (actions: IServiceActionInstance[]) {
+      .then(function (actions: IMongoServiceActionInstance[]) {
         logger.info(`${actions.length}, actions found, chaining`);
         const chain = actions.reduce(function (previous, item) {
           return previous.then(function (previousValue) {
             logger.info("a previous action is done, calling the next");
-            return this.handleAction(item, previousValue);
+            return self.handleAction(item, previousValue);
           });
-        }, Q.resolve({}));
+        }, Q.resolve(undefined));
       });
 
     return d.promise;
   }
 
-  public static async handleAction(action: IServiceActionInstance, previousAction: IServiceActionInstance) {
+  public static async handleAction(action: IMongoServiceActionInstance, previousAction: IMongoServiceActionInstance) {
     const d = Q.defer();
-    logger.info(`handle action: ${action.serviceAction.name}`);
-    switch (action.serviceAction.name) {
-      /*case "Reddit":
-        reddit.handleRedditStep(action, previousAction).then(function (result) {
-          logger.info("handle step:", action.serviceAction.name, action.name, "step is complete, resolving");
+    logger.info(`handle action: ${action.serviceAction.service.key}`);
+    switch (action.serviceAction.service.key) {
+      case "reddit":
+        ActionRepository.handleRedditAction(action, previousAction).then(function (result) {
+          logger.info(`handle action: ${action.serviceAction.name}, action is complete, resolving`);
           d.resolve(result);
         }, function (reason) {
-          logger.info("handle step:", action.serviceAction.name, action.name, "step has errors, rejecting");
+          logger.info(`handle action: ${action.serviceAction.name}, action has errors, rejecting`);
           d.reject(reason);
         });
-        break;*/
+        break;
       default:
-        d.resolve({});
+        d.resolve(undefined);
         break;
     }
 

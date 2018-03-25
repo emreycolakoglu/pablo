@@ -11,7 +11,7 @@ import { getHotListOf, RedditT3Link } from "../../integrations/reddit";
 import { difference } from "lodash";
 
 export class RedditRepository {
-  public static async checkHotPost(actionInstance: IMongoServiceActionInstance) {
+  public static async checkHotPost(actionInstance: IMongoServiceActionInstance, previousActionInstance: IMongoServiceActionInstance) {
     const d = Q.defer();
 
     try {
