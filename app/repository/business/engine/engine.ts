@@ -49,10 +49,10 @@ export class Engine {
           logger.debug(`found ${applets.length} applets to run this cycle`);
           applets.forEach(function (applet) {
             logger.debug(`running ${applet.name}`);
-            /*applet.lastRunDate = new Date();
+            applet.lastRunDate = new Date();
             applet.inProgress = true;
             applet.nextRunDate = moment().add(applet.interval, "s").toDate();
-            applet.save();*/
+            applet.save();
 
             self.chainActions(applet.actions)
               .then(function (result) {
@@ -67,6 +67,9 @@ export class Engine {
               });
             logger.debug(`got: ${applet.name}, ${applet.lastRunDate}, ${applet.nextRunDate}`);
           }, this);
+        }
+        else {
+          d.reject(err);
         }
       });
 
@@ -92,7 +95,11 @@ export class Engine {
             logger.info(`action '${item.serviceAction.name}' done, calling the next`);
             return self.handleAction(item, previousValue);
           });
-        }, Q.resolve(undefined));
+        }, Q.resolve({} as any));
+
+        chain.then((result: any) => {
+          d.resolve(result);
+        });
       });
 
     return d.promise;
@@ -113,7 +120,8 @@ export class Engine {
         });
         break;
       default:
-        d.resolve(undefined);
+        logger.debug(`handleAction, default action, resolving`);
+        d.resolve({} as any);
         break;
     }
 
