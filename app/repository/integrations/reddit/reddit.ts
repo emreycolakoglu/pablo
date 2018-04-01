@@ -17,6 +17,7 @@ export async function getHotListOf(source: string): Promise<RedditT3Link[]> {
         d.resolve(result.data.children);
       }
       else {
+        logger.error("Reddit, getHotListOf, children yok galiba");
         d.reject({ message: "Reddit, getHotListOf, children yok galiba" });
       }
     }

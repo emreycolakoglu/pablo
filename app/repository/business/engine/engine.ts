@@ -60,6 +60,7 @@ export class Engine {
                 applet.inProgress = false;
                 applet.save();
               }, function (reason) {
+                logger.info(`${applet.name} finished with errors`);
                 applet.inProgress = false;
                 logger.error(reason);
                 applet.save();
@@ -85,10 +86,10 @@ export class Engine {
       path: "applet"
     }])
       .then(function (actions: IMongoServiceActionInstance[]) {
-        logger.info(`${actions.length}, actions found, chaining`);
+        logger.info(`${actions.length} actions found, chaining`);
         const chain = actions.reduce(function (previous, item) {
           return previous.then(function (previousValue) {
-            logger.info("a previous action is done, calling the next");
+            logger.info(`action '${item.serviceAction.name}' done, calling the next`);
             return self.handleAction(item, previousValue);
           });
         }, Q.resolve(undefined));
@@ -99,14 +100,15 @@ export class Engine {
 
   public static async handleAction(action: IMongoServiceActionInstance, previousAction: IMongoServiceActionInstance) {
     const d = Q.defer();
-    logger.info(`handle action: ${action.serviceAction.service.key}`);
+    logger.debug(`an action with '${action.serviceAction.service.name}' type is starting`);
+
     switch (action.serviceAction.service.key) {
       case "reddit":
         ActionRepository.handleRedditAction(action, previousAction).then(function (result) {
           logger.info(`handle action: ${action.serviceAction.name}, action is complete, resolving`);
           d.resolve(result);
         }, function (reason) {
-          logger.info(`handle action: ${action.serviceAction.name}, action has errors, rejecting`);
+          logger.error(`handle action: ${action.serviceAction.name}, action has errors, rejecting`);
           d.reject(reason);
         });
         break;
