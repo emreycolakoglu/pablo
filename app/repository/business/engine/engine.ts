@@ -6,6 +6,7 @@ import { ActionRepository } from "./";
 import { AppletSchema, ServiceActionInstanceSchema } from "../../../database/mongo";
 import { IServiceActionInstance, IMongoServiceActionInstance } from "../../../database/models";
 import { RedditRepository } from "../reddit";
+import { SlackRepository } from "../slack";
 
 export class Engine {
 
@@ -112,6 +113,15 @@ export class Engine {
     switch (action.serviceAction.service.key) {
       case "reddit":
         ActionRepository.handleRedditAction(action, previousAction).then(function (result) {
+          logger.info(`handle action: ${action.serviceAction.name}, action is complete, resolving`);
+          d.resolve(result);
+        }, function (reason) {
+          logger.error(`handle action: ${action.serviceAction.name}, action has errors, rejecting`);
+          d.reject(reason);
+        });
+        break;
+      case "slack":
+        ActionRepository.handleSlackAction(action, previousAction).then(function (result) {
           logger.info(`handle action: ${action.serviceAction.name}, action is complete, resolving`);
           d.resolve(result);
         }, function (reason) {

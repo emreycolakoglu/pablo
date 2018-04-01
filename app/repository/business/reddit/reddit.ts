@@ -20,7 +20,7 @@ export class RedditRepository {
       /** subreddit ismini oku */
       const subreddit: IServiceActionInput = getInputWithName(actionInstance.inputs, "name");
       /** postları çek */
-      const redditPosts: RedditT3Link[] = await getHotListOf((subreddit as any).selectedValue);
+      const redditPosts: RedditT3Link[] = await getHotListOf((subreddit as any).value);
       logger.debug(`got ${redditPosts.length} posts`);
 
       const ids: string[] = redditPosts
@@ -30,22 +30,42 @@ export class RedditRepository {
 
       if (actionInstance.payload && actionInstance.payload.length > 0) {
         // aksiyonda bi onceki islemden gelen data var, reddit servisinden gelen data ile karsilastir
-        const newIds = difference(actionInstance.payload as string[], ids);
+        const newIds = difference(ids, actionInstance.payload as string[]);
         if (newIds && newIds.length > 0) {
           // yeni post var
           logger.debug(`found ${newIds.length} new posts`);
           const newPost = redditPosts.find(item => item.data.id == newIds[0]);
 
+          actionInstance.outputs = [];
+          actionInstance.outputs.push({
+            name: "title",
+            key: "title",
+            value: newPost.data.title,
+            type: 1
+          });
+          actionInstance.outputs.push({
+            name: "imageUrl",
+            key: "imageUrl",
+            value: newPost.data.url,
+            type: 1
+          });
+          actionInstance.outputs.push({
+            name: "comments",
+            key: "comments",
+            value: "",
+            type: 1
+          });
+
           // bir sonraki check icin payload guncelle
           actionInstance.payload = ids;
           await actionInstance.save();
 
-          d.resolve(newPost);
+          d.resolve(actionInstance);
         }
         else {
           // yeni bir post bulamadik
           logger.debug(`couldn't find new post`);
-          d.resolve(undefined);
+          d.resolve(actionInstance);
         }
       }
       else {
@@ -53,7 +73,7 @@ export class RedditRepository {
         // bir sonraki check icin payload guncelle
         actionInstance.payload = ids;
         await actionInstance.save();
-        d.resolve(undefined);
+        d.resolve(actionInstance);
       }
     } catch (error) {
       logger.error(`${error.message}`);

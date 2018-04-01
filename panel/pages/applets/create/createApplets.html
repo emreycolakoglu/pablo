@@ -99,9 +99,9 @@
             <form name="inputForm" class="form col-xs-12" ng-submit="self.saveInputs()">
               <div class="form-group" ng-repeat="input in self.selectedAction.inputs">
                 <label>{{input.name}}</label>
-                <textarea class="form-control" ng-model="input.selectedValue" required></textarea>
+                <textarea class="form-control" ng-model="input.value" required></textarea>
                 <div ng-if="self.applet.actions[self.applet.actions.length - 1].serviceAction.outputs.length > 0">
-                  <select class="form-control" ng-model="input.helper" ng-options="output.name as output.name for output in self.applet.actions[self.applet.actions.length - 1].serviceAction.outputs" ng-change="input.selectedValue = input.selectedValue + '{' + input.helper + '}'">
+                  <select class="form-control" ng-model="input.helper" ng-options="output.name as output.name for output in self.applet.actions[self.applet.actions.length - 1].serviceAction.outputs" ng-change="input.value = input.value + '{' + input.helper + '}'">
                     <option selected disabled>Select output from last action</option>
                   </select>
                 </div>

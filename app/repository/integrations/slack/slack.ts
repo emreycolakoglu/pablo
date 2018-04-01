@@ -1,24 +1,23 @@
 import * as Q from "q";
 import * as slackNode from "slack-node";
 
-const webhookUri = "https://hooks.slack.com/services/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";
-
 export class Slack {
   /**
    * sends slack message
    * @param messageText
    * @param channel
+   * @param webhookUrl
    */
-  public static async send(messageText: string, channel: string) {
+  public static async send(messageText: string, channel: string, webhookUrl: string) {
     const slack = new slackNode();
-    slack.setWebhook(webhookUri);
+    slack.setWebhook(webhookUrl);
 
     if (process.env.NODE_ENV == "test")
       channel = "test";
 
     const message = {
       channel: channel,
-      username: "API",
+      username: "Pablo",
       icon_emoji: ":robot_face:",
       text: messageText
     };

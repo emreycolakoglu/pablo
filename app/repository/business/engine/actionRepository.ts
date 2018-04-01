@@ -1,6 +1,7 @@
 import * as Q from "q";
 import { IServiceActionInstance, IMongoServiceActionInstance } from "../../../database/models";
 import { RedditRepository } from "../reddit";
+import { SlackRepository } from "../slack";
 import logger from "../../../logger";
 
 export class ActionRepository {
@@ -25,6 +26,28 @@ export class ActionRepository {
         });
         break;
       default:
+        break;
+    }
+
+    return d.promise;
+  }
+
+  public static async handleSlackAction(action: IMongoServiceActionInstance, previousAction: IMongoServiceActionInstance): Promise<any> {
+    const d = Q.defer();
+    logger.debug(`slack action '${action.serviceAction.name}' is starting`);
+
+    switch (action.serviceAction.key) {
+      case "send-slack-post":
+        SlackRepository.sendMessage(action, previousAction).then((actionResult: any) => {
+          logger.debug(`slack action '${action.serviceAction.name}' is resolving`);
+          d.resolve(actionResult);
+        }).catch((error) => {
+          logger.error(`slack action '${action.serviceAction.name}' is rejecting, ${error}`);
+          d.reject(error);
+        });
+        break;
+      default:
+        d.resolve({});
         break;
     }
 
