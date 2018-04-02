@@ -1,6 +1,6 @@
 angular.module("pablo", ["oc.lazyLoad", "ui.router", "ui.bootstrap", "LocalStorageModule"])
   .constant('constants', {
-    apiUrl: window.location.protocol + '//localhost:3000/api/'
+    apiUrl: `${window.location.protocol}//${window.location.host}/api/`
   })
   .run(["$rootScope", "authService", "$state", function ($rootScope, authService, $state) {
     authService.checkForUser();

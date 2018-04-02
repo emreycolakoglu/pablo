@@ -5,6 +5,7 @@
   "scripts": {
     "start": "NODE_ENV=production node ./dist/index.js",
     "debug": "NODE_ENV=test node ./dist/index.js",
+    "debug-windows": "set NODE_ENV=test&&node ./dist/index.js",
     "build": "tsc",
     "postinstall": "tsc",
     "docker-debug": "docker-compose up",
