@@ -29,12 +29,26 @@ export function getInputWithName(array: any[], name: string): IServiceActionInpu
 }
 
 export function replacePlaceholderInInput(value: string, previousActionOutputs: IServiceActionInput[]): string {
+  let foundAndReplaced: boolean = false;
   // tum outputlar icin don, eger bulursan replace et
   previousActionOutputs.map((actionOutput: IServiceActionInput) => {
     if (value.indexOf(actionOutput.key) > -1) {
       value = value.replace(`{${actionOutput.key}}`, actionOutput.value);
+      foundAndReplaced = true;
     }
   });
+  if (foundAndReplaced)
+    return value;
+  else
+    throw new Error("NOT FOUND");
+}
 
-  return value;
+/** check for curly braces if value needs replacing */
+export function inputNeedsReplacing(value: string) {
+  if (value.indexOf("{") > -1 && value.indexOf("}") > -1) {
+    return true;
+  }
+  else {
+    return false;
+  }
 }

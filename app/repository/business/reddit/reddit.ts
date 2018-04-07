@@ -64,6 +64,9 @@ export class RedditRepository {
         }
         else {
           // yeni bir post bulamadik
+          // outputlari temizle
+          actionInstance.outputs = [];
+          await actionInstance.save();
           logger.debug(`couldn't find new post`);
           d.resolve(actionInstance);
         }
