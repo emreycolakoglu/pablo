@@ -43,6 +43,7 @@ export class SlackRepository {
         });
 
     } catch (error) {
+      logger.error(error);
       actionInstance.outputs = [];
       await actionInstance.save();
       d.resolve(actionInstance);

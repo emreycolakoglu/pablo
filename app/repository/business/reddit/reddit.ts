@@ -7,7 +7,7 @@
 
 import * as Q from "q";
 import { getInputWithName, IServiceActionInput, IMongoServiceActionInstance } from "../../../database/models";
-import { getHotListOf, RedditT3Link } from "../../integrations/reddit";
+import { getHotListOf, RedditT3Link, forceSsl, getCommentsOfPost, prepareCommentsHtml } from "../../integrations/reddit";
 import { difference } from "lodash";
 import logger from "../../../logger";
 
@@ -26,7 +26,7 @@ export class RedditRepository {
       const ids: string[] = redditPosts
         .filter(item => item.data.stickied == false)
         .map(item => item.data.id);
-        logger.debug(`filtered stickied posts, got ${ids.length} left`);
+      logger.debug(`filtered stickied posts, got ${ids.length} left`);
 
       if (actionInstance.payload && actionInstance.payload.length > 0) {
         // aksiyonda bi onceki islemden gelen data var, reddit servisinden gelen data ile karsilastir
@@ -35,6 +35,7 @@ export class RedditRepository {
           // yeni post var
           logger.debug(`found ${newIds.length} new posts`);
           const newPost = redditPosts.find(item => item.data.id == newIds[0]);
+          const comments: string[] = await getCommentsOfPost(newPost.data.permalink);
 
           actionInstance.outputs = [];
           actionInstance.outputs.push({
@@ -46,13 +47,13 @@ export class RedditRepository {
           actionInstance.outputs.push({
             name: "imageUrl",
             key: "imageUrl",
-            value: newPost.data.url,
+            value: forceSsl(newPost.data.url),
             type: 1
           });
           actionInstance.outputs.push({
             name: "comments",
             key: "comments",
-            value: "",
+            value: prepareCommentsHtml(comments),
             type: 1
           });
 

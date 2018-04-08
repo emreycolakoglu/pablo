@@ -2,7 +2,7 @@ process.env.NODE_ENV = "test";
 import * as mocha from "mocha";
 import * as chai from "chai";
 
-import { getHotListOf, getSinglePost, getCommentsOfPost } from "./reddit";
+import { getHotListOf, getSinglePost, getCommentsOfPost, forceSsl } from "./reddit";
 
 const should = chai.should();
 
@@ -22,5 +22,9 @@ describe("reddit", function () {
     return getHotListOf("r/RealGirls").then(function (result) {
       result.should.be.a("array");
     });
+  });
+  it("should force https on media urls", function () {
+    const newUrl = forceSsl("http://i.imgur.com/A1S2D3");
+    newUrl.should.be.eql("https://i.imgur.com/A1S2D3");
   });
 });

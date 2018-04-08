@@ -2,6 +2,7 @@ import * as Q from "q";
 import * as request from "request";
 import { RedditListingEntity, RedditT3Link, RedditT1Comment } from "./";
 import logger from "../../../logger";
+import { URL } from "url";
 
 export async function getHotListOf(source: string): Promise<RedditT3Link[]> {
   const d = Q.defer<RedditT3Link[]>();
@@ -85,4 +86,22 @@ export async function getCommentsOfPost(postLink: string): Promise<string[]> {
   });
 
   return d.promise;
+}
+
+export function forceSsl(link: string) {
+  const uri: URL = new URL(link);
+  if (uri.protocol == "http:") {
+    uri.protocol = "https:";
+  }
+  return uri.href;
+}
+
+export function prepareCommentsHtml(comments: string[]): string {
+  let html: string = "";
+  html += `<div class="comments">`;
+  comments.map((comment: string) => {
+    html += `<div class="comment">${comment}</div>`;
+  });
+  html += `</div>`;
+  return html;
 }
