@@ -61,6 +61,10 @@ export async function getSinglePost(postLink: string): Promise<RedditT3Link> {
 export async function getCommentsOfPost(postLink: string): Promise<string[]> {
   const d = Q.defer<string[]>();
 
+  if (postLink.indexOf("reddit.com") == -1) {
+    postLink = "https://www.reddit.com" + postLink;
+  }
+
   const client = {
     json: true,
     method: "GET",
