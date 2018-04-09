@@ -1,7 +1,7 @@
 import { ServiceActionInstanceRepository } from "../repository/business/serviceActionInstance";
 import { IMongoServiceActionInstance } from "../database/models";
 
-export default class ServiceController {
+export default class ServiceActionInstanceController {
   public static async getList(req, res) {
     ServiceActionInstanceRepository.list(req.query).then((ds: IMongoServiceActionInstance[]) => {
       res.json(ds);

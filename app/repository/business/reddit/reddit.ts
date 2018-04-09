@@ -56,6 +56,18 @@ export class RedditRepository {
             value: prepareCommentsHtml(comments),
             type: 1
           });
+          actionInstance.outputs.push({
+            name: "uniqueId",
+            key: "uniqueId",
+            value: newPost.data.id,
+            type: 1
+          });
+          actionInstance.outputs.push({
+            name: "subreddit",
+            key: "subreddit",
+            value: newPost.data.subreddit,
+            type: 1
+          });
 
           // bir sonraki check icin payload guncelle
           actionInstance.payload = ids;

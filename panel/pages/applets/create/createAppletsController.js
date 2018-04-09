@@ -105,7 +105,8 @@ angular.module('pablo')
             restService.post("serviceActionInstances", {
               serviceAction: action.serviceAction._id,
               applet: appletCreateResult._id,
-              inputs: action.serviceAction.inputs
+              inputs: action.serviceAction.inputs,
+              order: index
             });
           });
         });
