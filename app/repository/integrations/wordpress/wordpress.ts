@@ -3,7 +3,7 @@ import * as request from "request";
 import logger from "../../../logger";
 import { WordpressPostRequest, WordpressPostResponse, WordpressAuthData } from "./";
 
-export class WordpressRepository {
+export class WordpressIntegration {
 
   constructor(authData: WordpressAuthData) {
     this.authData = authData;
@@ -106,19 +106,42 @@ export class WordpressRepository {
     return d.promise;
   }
 
-  prepareClientOptions() {
+  prepareClientOptions(includeAuth: boolean = true) {
     logger.info("wordpress raw: starting preparing client options");
-    const options = {
+    const options: any = {
       json: true,
       headers: {
         "User-Agent": "Pablo"
-      },
-      auth: {
+      }
+    };
+    if (includeAuth)
+      options.auth = {
         "user": "" + this.authData.username,
         "pass": "" + this.authData.password,
         "sendImmediately": true
-      }
-    };
+      };
     return options;
+  }
+
+  /** returns last posts of from wp blog */
+  getLastPosts(): Q.Promise<any> {
+    const d = Q.defer<any>();
+
+    logger.info("wordpress raw: starting fetching last posts");
+    const options: any = this.prepareClientOptions(false);
+    options.url = this.authData.endpoint + this.apiUrls.post;
+    
+    request.get(options, function (err, httpResponse, response: WordpressPostResponse) {
+      if (!err && httpResponse.statusCode > 199 && httpResponse.statusCode < 301) {
+        logger.info("success", response.id);
+        d.resolve(response);
+      }
+      else {
+        logger.error(err);
+        d.reject(err);
+      }
+    });
+
+    return d.promise;
   }
 }

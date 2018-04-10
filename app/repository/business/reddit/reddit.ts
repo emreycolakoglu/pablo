@@ -93,7 +93,7 @@ export class RedditRepository {
       }
     } catch (error) {
       logger.error(`${error.message}`);
-      d.reject("test");
+      d.reject(error);
     }
 
     return d.promise;

@@ -20,6 +20,38 @@ export interface WordpressPostResponse {
   tags: number[];
 }
 
+export interface WordpressAjaxPost extends WordpressPostResponse{
+  id: number;
+  date: Date;
+  date_gmt: string;
+  guid: string;
+  modified: string;
+  modified_gmt: string;
+  slug: string;
+  status: string;
+  type: string;
+  link: string;
+  title: {
+    raw: string,
+    rendered: string
+  };
+  content: {
+    raw: string,
+    rendered: string
+  };
+  excerpt: {
+    raw: string,
+    rendered: string
+  };
+  author: number;
+  featured_media: number;
+  comment_status: string;
+  ping_status: string;
+  sticky: boolean;
+  template: string;
+  format: string;
+}
+
 export interface WordpressAuthData {
   endpoint: string;
   username: string;

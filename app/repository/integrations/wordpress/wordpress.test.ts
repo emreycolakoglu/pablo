@@ -2,7 +2,7 @@ process.env.NODE_ENV = "test";
 import * as mocha from "mocha";
 import * as chai from "chai";
 
-import { WordpressRepository, WordpressAuthData } from "./";
+import { WordpressIntegration, WordpressAuthData } from "./";
 
 const should = chai.should();
 
@@ -13,7 +13,7 @@ describe("wordpress", () => {
       password: undefined,
       username: undefined
     };
-    const client = new WordpressRepository(authOptions);
+    const client = new WordpressIntegration(authOptions);
     return client.post({
       categories: undefined,
       content: undefined,
@@ -26,4 +26,16 @@ describe("wordpress", () => {
       result["_success"].should.be.eql(true);
     });
   });
+  it.only("should get last posts", () => {
+    const authOptions: WordpressAuthData = {
+      endpoint: "https://webrazzi.com/wp-json",
+      password: undefined,
+      username: undefined
+    };
+    const client = new WordpressIntegration(authOptions);
+    return client.getLastPosts()
+      .then((result: any[] )=> {
+        result.should.be.a("array");
+      });
+  })
 });
