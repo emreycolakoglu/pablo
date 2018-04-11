@@ -2,6 +2,7 @@ import * as Q from "q";
 import { IServiceActionInstance, IMongoServiceActionInstance } from "../../../database/models";
 import { RedditRepository } from "../reddit";
 import { SlackRepository } from "../slack";
+import { WordpressRepository } from "../wordpress";
 import logger from "../../../logger";
 
 export class ActionRepository {
@@ -43,6 +44,28 @@ export class ActionRepository {
           d.resolve(actionResult);
         }).catch((error) => {
           logger.error(`slack action '${action.serviceAction.name}' is rejecting, ${error}`);
+          d.reject(error);
+        });
+        break;
+      default:
+        d.resolve({});
+        break;
+    }
+
+    return d.promise;
+  }
+
+  public static async handleWordpressAction(action: IMongoServiceActionInstance, previousAction: IMongoServiceActionInstance): Promise<any> {
+    const d = Q.defer();
+    logger.debug(`wordpress action '${action.serviceAction.name}' is starting`);
+
+    switch (action.serviceAction.key) {
+      case "get-last-post-of-blog":
+        WordpressRepository.getLastPosts(action, previousAction).then((actionResult: any) => {
+          logger.debug(`wordpress action '${action.serviceAction.name}' is resolving`);
+          d.resolve(actionResult);
+        }).catch((error) => {
+          logger.error(`wordpress action '${action.serviceAction.name}' is rejecting, ${error}`);
           d.reject(error);
         });
         break;
