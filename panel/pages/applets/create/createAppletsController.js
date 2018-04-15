@@ -69,7 +69,7 @@ angular.module('pablo')
 
     self.saveActionToApplet = function (action) {
       self.applet.actions = self.applet.actions || [];
-      if(self.tempAuthData){
+      if (self.tempAuthData) {
         action.serviceAction.auth = angular.copy(self.tempAuthData);
         self.tempAuthData = undefined;
       }
@@ -88,9 +88,9 @@ angular.module('pablo')
         interval: self.applet.interval,
         inProgress: false,
         owner: self.applet.owner
-      }).then(function(appletCreateResult){
+      }).then(function (appletCreateResult) {
         console.log("applet created", appletCreateResult);
-        self.applet.actions.map(function(action, index){
+        self.applet.actions.map(function (action, index) {
           //bagladigi hesaplari yarat
           restService.post("serviceInstances", {
             serviceType: action.serviceAction.service,
@@ -100,22 +100,23 @@ angular.module('pablo')
             username: action.serviceAction.auth ? action.serviceAction.auth.username : undefined,
             password: action.serviceAction.auth ? action.serviceAction.auth.password : undefined,
             endpoint: action.serviceAction.auth ? action.serviceAction.auth.endpoint : undefined
-          }).then(function(serviceInstanceCreateResult){
+          }).then(function (serviceInstanceCreateResult) {
             //o servisin aksiyonunu yarat
             restService.post("serviceActionInstances", {
               serviceAction: action.serviceAction._id,
+              serviceInstance: serviceInstanceCreateResult._id,
               applet: appletCreateResult._id,
               inputs: action.serviceAction.inputs,
               order: index
             });
           });
         });
-      }).catch(function(error){
+      }).catch(function (error) {
         window.toastr.error(error);
       });
     };
 
-    self.reset =  function(){
+    self.reset = function () {
       self.applet = {
         name: '',
         interval: 3600,

@@ -3,6 +3,7 @@ import { IMongoServiceActionInstance } from "../models";
 
 const serviceActionInstanceSchema = new Schema({
   serviceAction: { type: Schema.Types.ObjectId, ref: "ServiceAction" },
+  serviceInstance: { type: Schema.Types.ObjectId, ref: "ServiceInstance" },
   applet: { type: Schema.Types.ObjectId, ref: "Applet" },
   payload: { type: Schema.Types.Mixed },
   inputs: [{ type: Schema.Types.Mixed }],

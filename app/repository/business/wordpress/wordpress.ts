@@ -70,4 +70,31 @@ export class WordpressRepository {
 
     return d.promise;
   }
+
+  public static async newPost(actionInstance: IMongoServiceActionInstance, previousActionInstance: IMongoServiceActionInstance) {
+    const d = Q.defer();
+
+    logger.debug(`starting wordpress newPost`);
+    try {
+      const endpoint: IServiceActionInput = getInputWithName(actionInstance.inputs, "endpoint");
+
+      const username: IServiceActionInput = getInputWithName(actionInstance.inputs, "username");
+      const password: IServiceActionInput = getInputWithName(actionInstance.inputs, "password");
+
+      const wpClient = new WordpressIntegration({
+        endpoint: endpoint.value,
+        username: username.value,
+        password: password.value
+      });
+
+
+
+
+    } catch (error) {
+      logger.error(`${error.message}`);
+      d.reject(error);
+    }
+
+    return d.promise;
+  }
 }

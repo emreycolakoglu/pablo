@@ -49,7 +49,10 @@ export class Engine {
       .where("nextRunDate").lt(Date.now())
       .populate({
         path: "actions",
-        options: { sort: { order: 1 } }
+        options: { sort: { order: 1 } },
+        populate: {
+          path: "serviceActions"
+        }
       })
       .exec(function (err, applets) {
         if (!err) {

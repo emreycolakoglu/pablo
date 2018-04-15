@@ -39,7 +39,7 @@
     "slug": "^0.9.1",
     "ts-node": "^5.0.1",
     "tslint": "^5.9.1",
-    "typescript": "^2.7.2",
+    "typescript": "^2.8.1",
     "winston": "^3.0.0-rc2"
   },
   "devDependencies": {
@@ -71,7 +71,7 @@
     "gulp-concat": "^2.6.1",
     "gulp-copy": "^1.0.1",
     "gulp-sourcemaps": "^2.6.4",
-    "gulp-typescript": "^4.0.1",
+    "gulp-typescript": "^4.0.2",
     "gulp-uglify": "^3.0.0",
     "oclazyload": "^1.1.0",
     "run-sequence": "^2.2.1"
