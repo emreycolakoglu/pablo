@@ -14,7 +14,13 @@ export class Engine {
     name: "cycle",
     id: "",
     schedule: "*/3 * * * * *",
-    callback: function () { Engine.cycle(); }
+    callback: function () {
+      Engine.cycle().then(() => {
+        logger.debug("engine cycle finished succesfully");
+      }).catch(() => {
+        logger.debug("engine cycle finished with errors");
+      });
+    }
   }];
 
   /**
@@ -101,6 +107,8 @@ export class Engine {
         chain.then((result: any) => {
           d.resolve(result);
         });
+      }).catch((error: any) => {
+        d.reject(error);
       });
 
     return d.promise;
