@@ -130,7 +130,7 @@ export class WordpressIntegration {
     logger.info("wordpress raw: starting fetching last posts");
     const options: any = this.prepareClientOptions(false);
     options.url = this.authData.endpoint + this.apiUrls.post;
-    
+
     request.get(options, function (err, httpResponse, response: WordpressPostResponse) {
       if (!err && httpResponse.statusCode > 199 && httpResponse.statusCode < 301) {
         logger.info("success", response.id);

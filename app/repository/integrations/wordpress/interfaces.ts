@@ -4,7 +4,7 @@ export interface WordpressPostRequest {
   format: string;
   categories: Number;
   thumbnail: string;
-  status: boolean;
+  status?: boolean;
 }
 
 export interface WordpressPostResponse {
