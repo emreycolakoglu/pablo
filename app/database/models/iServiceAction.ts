@@ -22,7 +22,7 @@ export function getInputWithName(array: any[], name: string): IServiceActionInpu
 
   if (!found || (found && found.length == 0))
     throw {
-      message: "Input with name Not found"
+      message: `Input with name: ${name} Not found`
     };
   else if (found && found.length > 0)
     return found[0];

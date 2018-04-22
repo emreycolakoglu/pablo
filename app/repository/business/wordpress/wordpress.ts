@@ -10,10 +10,8 @@ export class WordpressRepository {
 
     logger.debug(`starting wordpress getlastpots`);
     try {
-      const endpoint: IServiceActionInput = getInputWithName(actionInstance.inputs, "endpoint");
-
       const wpClient = new WordpressIntegration({
-        endpoint: endpoint.value,
+        endpoint: actionInstance.serviceInstance.endpoint,
         username: undefined,
         password: undefined
       });
@@ -76,34 +74,62 @@ export class WordpressRepository {
 
     logger.debug(`starting wordpress newPost`);
     try {
-      const endpoint: IServiceActionInput = getInputWithName(actionInstance.inputs, "endpoint");
+      const endpoint: string = actionInstance.serviceInstance.endpoint;
       const username: string = actionInstance.serviceInstance.username;
       const password: string = actionInstance.serviceInstance.password;
 
       const title: IServiceActionInput = getInputWithName(actionInstance.inputs, "title");
       if (inputNeedsReplacing(title.value))
-      title.value = replacePlaceholderInInput(title.value, previousActionInstance.outputs);
+        title.value = replacePlaceholderInInput(title.value, previousActionInstance.outputs);
 
       const thumbnail: IServiceActionInput = getInputWithName(actionInstance.inputs, "thumbnail");
-      if (inputNeedsReplacing(title.value))
-      thumbnail.value = replacePlaceholderInInput(thumbnail.value, previousActionInstance.outputs);
+      if (inputNeedsReplacing(thumbnail.value))
+        thumbnail.value = replacePlaceholderInInput(thumbnail.value, previousActionInstance.outputs);
+
+      const categoryId: IServiceActionInput = getInputWithName(actionInstance.inputs, "categoryId");
+      if (inputNeedsReplacing(categoryId.value))
+        categoryId.value = replacePlaceholderInInput(categoryId.value, previousActionInstance.outputs);
+
+      const body: IServiceActionInput = getInputWithName(actionInstance.inputs, "body");
+      if (inputNeedsReplacing(body.value))
+        body.value = replacePlaceholderInInput(body.value, previousActionInstance.outputs);
 
       const wpClient = new WordpressIntegration({
-        endpoint: endpoint.value,
+        endpoint: endpoint,
         username: username,
         password: password
       });
 
       const newPost = await wpClient.post({
         title: title.value,
-        // TODO PREPARE CONTENT
-        content: "",
+        content: body.value,
         format: "image",
-        categories: 1,
+        categories: categoryId.value,
         thumbnail: thumbnail.value
+      }).then((newPostResponse: WordpressPostResponse) => {
+        return wpClient.publish(newPostResponse.id);
+      }).then((publishResponse: WordpressPostResponse) => {
+        actionInstance.outputs = [];
+        actionInstance.outputs.push({
+          name: "postId",
+          key: "postId",
+          value: publishResponse.id,
+          type: 1
+        });
+        actionInstance.outputs.push({
+          name: "portUrl",
+          key: "portUrl",
+          value: publishResponse.slug,
+          type: 1
+        });
+        return actionInstance.save();
+      }).then((actionInstance: IMongoServiceActionInstance) => {
+        logger.debug(`finished wordpress newPost with success`);
+        d.resolve(actionInstance);
+      }).catch((error: any) => {
+        logger.error(error.message);
+        d.reject(error);
       });
-
-      // TODO PUBLISH
 
     } catch (error) {
       logger.error(`${error.message}`);

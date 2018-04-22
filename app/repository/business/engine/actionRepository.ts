@@ -60,7 +60,7 @@ export class ActionRepository {
     logger.debug(`wordpress action '${action.serviceAction.name}' is starting`);
 
     switch (action.serviceAction.key) {
-      case "get-last-post-of-blog":
+      case "get-last-posts-of-blog":
         WordpressRepository.getLastPosts(action, previousAction).then((actionResult: any) => {
           logger.debug(`wordpress action '${action.serviceAction.name}' is resolving`);
           d.resolve(actionResult);
@@ -69,7 +69,17 @@ export class ActionRepository {
           d.reject(error);
         });
         break;
+      case "post-to-wordpress":
+        WordpressRepository.newPost(action, previousAction).then((actionResult: any) => {
+          logger.debug(`wordpress action '${action.serviceAction.name}' is resolving`);
+          d.resolve(actionResult);
+        }).catch((error) => {
+          logger.error(`wordpress action '${action.serviceAction.name}' is rejecting, ${error}`);
+          d.reject(error);
+        });
+        break;
       default:
+        logger.debug("handleWordpressAction default action");
         d.resolve({});
         break;
     }

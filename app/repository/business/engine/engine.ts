@@ -97,6 +97,8 @@ export class Engine {
       }
     }, {
       path: "applet"
+    }, {
+      path: "serviceInstance"
     }])
       .then(function (actions: IMongoServiceActionInstance[]) {
         logger.info(`${actions.length} actions found, chaining`);
@@ -109,6 +111,8 @@ export class Engine {
 
         chain.then((result: any) => {
           d.resolve(result);
+        }).catch((error: any) => {
+          d.reject(error);
         });
       }).catch((error: any) => {
         d.reject(error);
@@ -133,6 +137,15 @@ export class Engine {
         break;
       case "slack":
         ActionRepository.handleSlackAction(action, previousAction).then(function (result) {
+          logger.info(`handle action: ${action.serviceAction.name}, action is complete, resolving`);
+          d.resolve(result);
+        }, function (reason) {
+          logger.error(`handle action: ${action.serviceAction.name}, action has errors, rejecting`);
+          d.reject(reason);
+        });
+        break;
+      case "wordpress":
+        ActionRepository.handleWordpressAction(action, previousAction).then(function (result) {
           logger.info(`handle action: ${action.serviceAction.name}, action is complete, resolving`);
           d.resolve(result);
         }, function (reason) {

@@ -20,7 +20,7 @@ export interface WordpressPostResponse {
   tags: number[];
 }
 
-export interface WordpressAjaxPost extends WordpressPostResponse{
+export interface WordpressAjaxPost extends WordpressPostResponse {
   id: number;
   date: Date;
   date_gmt: string;
