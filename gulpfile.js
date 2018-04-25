@@ -17,7 +17,7 @@ gulp.task('typescript', function () {
     .pipe(sourcemaps.init())
     .pipe(tsProject());
   return tsResult.js
-    .pipe(sourcemaps.write())
+    .pipe(sourcemaps.write("./"))
     .pipe(gulp.dest('dist'));
 });
 
