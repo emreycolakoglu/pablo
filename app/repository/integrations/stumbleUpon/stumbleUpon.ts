@@ -18,19 +18,26 @@ export class StumbleUpon {
   private _cookieJar: request.CookieJar;
   private _urls: any;
 
-  public postToStumbleUpon(link: string, cat: string, message: string = "", nsfw: boolean = false, tags: any = undefined) {
+  public postToStumbleUpon(
+    link: string,
+    cat: string,
+    message: string = "",
+    nsfw: boolean = false,
+    tags: any = undefined
+  ) {
     const d = Q.defer();
     const self = this;
 
-    self.login()
-      .then(function (result) {
+    self
+      .login()
+      .then(function(result) {
         return self.post(link, cat, message, nsfw, tags);
       })
-      .then(function (result) {
+      .then(function(result) {
         const resultAsStr = JSON.parse(result);
         d.resolve(resultAsStr);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         d.reject(error);
       });
 
@@ -43,22 +50,27 @@ export class StumbleUpon {
    * @param post
    * @param ajax
    */
-  private getHeaders(referrer: string, post: boolean = false, ajax: boolean = false): any {
+  private getHeaders(
+    referrer: string,
+    post: boolean = false,
+    ajax: boolean = false
+  ): any {
     const headers: any = {};
     if (ajax) {
       headers["X-Requested-With"] = "XMLHttpRequest";
     }
     headers["Connection"] = "keep-alive";
     headers["Referer"] = referrer;
-    headers["User-Agent"] = "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)";
+    headers["User-Agent"] =
+      "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)";
     if (post) {
       headers["Content-Type"] = "application/x-www-form-urlencoded";
     }
     if (ajax) {
       headers["Accept"] = "application/json, text/javascript, */*; q=0.01";
-    }
-    else {
-      headers["Accept"] = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
+    } else {
+      headers["Accept"] =
+        "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
     }
     headers["Origin"] = "https://www.stumbleupon.com";
 
@@ -86,7 +98,12 @@ export class StumbleUpon {
    * @param headers
    * @param fields
    */
-  private getRequestOptions(method: string, url: string, headers: any, fields: any) {
+  private getRequestOptions(
+    method: string,
+    url: string,
+    headers: any,
+    fields: any
+  ) {
     const options = {
       method: method,
       url: url,
@@ -102,32 +119,44 @@ export class StumbleUpon {
     const self = this;
 
     const pageHeaders = self.getHeaders(self._urls.LOGINPAGE, false, false);
-    const pageRequestOptions = self.getRequestOptions("GET", self._urls.LOGINPAGE, pageHeaders, undefined);
+    const pageRequestOptions = self.getRequestOptions(
+      "GET",
+      self._urls.LOGINPAGE,
+      pageHeaders,
+      undefined
+    );
 
-    request(pageRequestOptions, function (error, response, body) {
+    request(pageRequestOptions, function(error, response, body) {
       if (error) {
         d.reject(error);
-      }
-      else {
+      } else {
         const loginFormToken = self.extractData(body, "input#token");
         const fields: any = {
-          "user": self._username,
-          "pass": self._password,
-          "_token": loginFormToken,
-          "_output": "Json",
-          "remember": "true",
-          "nativeSubmit": "0",
-          "_action": "auth",
-          "_method": "create"
+          user: self._username,
+          pass: self._password,
+          _token: loginFormToken,
+          _output: "Json",
+          remember: "true",
+          nativeSubmit: "0",
+          _action: "auth",
+          _method: "create"
         };
-        const loginRequestHeaders = self.getHeaders(self._urls.LOGINPAGE, true, true);
-        const loginRequestOptions = self.getRequestOptions("POST", self._urls.LOGINPAGE, loginRequestHeaders, fields);
+        const loginRequestHeaders = self.getHeaders(
+          self._urls.LOGINPAGE,
+          true,
+          true
+        );
+        const loginRequestOptions = self.getRequestOptions(
+          "POST",
+          self._urls.LOGINPAGE,
+          loginRequestHeaders,
+          fields
+        );
 
-        request(loginRequestOptions, function (error, response, body) {
+        request(loginRequestOptions, function(error, response, body) {
           if (error) {
             d.reject(error);
-          }
-          else {
+          } else {
             d.resolve(body);
           }
         });
@@ -137,40 +166,62 @@ export class StumbleUpon {
     return d.promise;
   }
 
-  private post(link: string, cat: string, message: string = "", nsfw: boolean = false, tags: any = undefined): Q.Promise<string> {
+  private post(
+    link: string,
+    cat: string,
+    message: string = "",
+    nsfw: boolean = false,
+    tags: any = undefined
+  ): Q.Promise<string> {
     const d = Q.defer<string>();
     const self = this;
 
-    const postPageHeaders = self.getHeaders(self._urls.SUBMITPAGE, false, false);
-    const postPageOptions = self.getRequestOptions("GET", self._urls.SUBMITPAGE, postPageHeaders, undefined);
+    const postPageHeaders = self.getHeaders(
+      self._urls.SUBMITPAGE,
+      false,
+      false
+    );
+    const postPageOptions = self.getRequestOptions(
+      "GET",
+      self._urls.SUBMITPAGE,
+      postPageHeaders,
+      undefined
+    );
 
-    request(postPageOptions, function (error, response, body) {
+    request(postPageOptions, function(error, response, body) {
       if (error) {
         d.reject(error);
-      }
-      else {
+      } else {
         const postPageToken = self.extractData(body, "input[name='_token']");
         const fields = {
-          "url": link,
-          "_token": postPageToken,
-          "_output": "Json",
-          "language": "EN",
-          "nativeSubmit": "0",
-          "_action": "submitUrl",
-          "_method": "create",
-          "review": message,
-          "tags": cat,
-          "nsfw": nsfw ? "true" : "false",
+          url: link,
+          _token: postPageToken,
+          _output: "Json",
+          language: "EN",
+          nativeSubmit: "0",
+          _action: "submitUrl",
+          _method: "create",
+          review: message,
+          tags: cat,
+          nsfw: nsfw ? "true" : "false",
           "user-tags": tags
         };
 
-        const postRequesHeaders = self.getHeaders(self._urls.SUBMITPAGE, true, true);
-        const postRequestOptions = self.getRequestOptions("POST", self._urls.SUBMITPAGE, postRequesHeaders, fields);
-        request(postRequestOptions, function (error, response, body) {
+        const postRequesHeaders = self.getHeaders(
+          self._urls.SUBMITPAGE,
+          true,
+          true
+        );
+        const postRequestOptions = self.getRequestOptions(
+          "POST",
+          self._urls.SUBMITPAGE,
+          postRequesHeaders,
+          fields
+        );
+        request(postRequestOptions, function(error, response, body) {
           if (error) {
             d.reject(error);
-          }
-          else {
+          } else {
             d.resolve(body);
           }
         });

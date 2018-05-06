@@ -8,12 +8,15 @@ export class Slack {
    * @param channel
    * @param webhookUrl
    */
-  public static async send(messageText: string, channel: string, webhookUrl: string) {
+  public static async send(
+    messageText: string,
+    channel: string,
+    webhookUrl: string
+  ) {
     const slack = new slackNode();
     slack.setWebhook(webhookUrl);
 
-    if (process.env.NODE_ENV == "test")
-      channel = "test";
+    if (process.env.NODE_ENV == "test") channel = "test";
 
     const message = {
       channel: channel,
@@ -23,11 +26,10 @@ export class Slack {
     };
 
     const d = Q.defer();
-    slack.webhook(message, function (err, response) {
+    slack.webhook(message, function(err, response) {
       if (err) {
         d.reject(err);
-      }
-      else {
+      } else {
         d.resolve(response);
       }
     });

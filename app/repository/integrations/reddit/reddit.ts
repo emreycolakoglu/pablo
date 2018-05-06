@@ -4,6 +4,10 @@ import { RedditListingEntity, RedditT3Link, RedditT1Comment } from "./";
 import logger from "../../../logger";
 import { URL } from "url";
 
+/**
+ * get hot posts of subreddit
+ * @param source
+ */
 export async function getHotListOf(source: string): Promise<RedditT3Link[]> {
   const d = Q.defer<RedditT3Link[]>();
 
@@ -11,6 +15,72 @@ export async function getHotListOf(source: string): Promise<RedditT3Link[]> {
     json: true,
     method: "GET",
     url: `https://www.reddit.com/${source}/hot/.json`
+  };
+  request(client, function(
+    err: any,
+    httpResponse: any,
+    result: RedditListingEntity
+  ) {
+    if (!err && httpResponse.statusCode == 200) {
+      if (result && result.data && result.data.children) {
+        d.resolve(result.data.children);
+      } else {
+        logger.error("Reddit, getHotListOf, children yok galiba");
+        d.reject({ message: "Reddit, getHotListOf, children yok galiba" });
+      }
+    } else {
+      logger.error("reddit provider: get comments error", err);
+      d.reject(err);
+    }
+  });
+
+  return d.promise;
+}
+
+/**
+ * get new posts of subreddit
+ * @param source
+ */
+export async function getNewListOf(source: string): Promise<RedditT3Link[]> {
+  const d = Q.defer<RedditT3Link[]>();
+
+  const client = {
+    json: true,
+    method: "GET",
+    url: `https://www.reddit.com/${source}/new/.json`
+  };
+  request(client, function(
+    err: any,
+    httpResponse: any,
+    result: RedditListingEntity
+  ) {
+    if (!err && httpResponse.statusCode == 200) {
+      if (result && result.data && result.data.children) {
+        d.resolve(result.data.children);
+      } else {
+        logger.error("Reddit, getHotListOf, children yok galiba");
+        d.reject({ message: "Reddit, getHotListOf, children yok galiba" });
+      }
+    } else {
+      logger.error("reddit provider: get comments error", err);
+      d.reject(err);
+    }
+  });
+
+  return d.promise;
+}
+
+/**
+ * get top posts of subreddit
+ * @param source
+ */
+export async function getTopListOf(source: string): Promise<RedditT3Link[]> {
+  const d = Q.defer<RedditT3Link[]>();
+
+  const client = {
+    json: true,
+    method: "GET",
+    url: `https://www.reddit.com/${source}/top/.json`
   };
   request(client, function(
     err: any,
