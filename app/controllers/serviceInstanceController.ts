@@ -51,7 +51,7 @@ export default class ServiceController {
   }
 
   public static async usersServiceInstances(req, res) {
-    ServiceInstanceRepository.usersServiceInstances(req.userid, req.query).then((ds: IMongoServiceInstance[]) => {
+    ServiceInstanceRepository.usersServiceInstances(req.userid, req.params.id).then((ds: IMongoServiceInstance[]) => {
       res.json(ds);
     }).catch((error: any) => {
       res.status(500).send({ message: error.message });

@@ -32,9 +32,11 @@ routes.route("/services/:id")
   .delete(Authentication.checkToken("admin"), ServiceController.delete);
 routes.route("/services/:id/actions")
   .get(ServiceActionController.getActionsOfService);
+routes.route("/services/:id/instances")
+  .get(Authentication.checkToken("admin"), ServiceInstanceController.usersServiceInstances);
 
 routes.route("/serviceInstances")
-  .get(Authentication.checkToken("admin"), ServiceInstanceController.usersServiceInstances)
+  .get(Authentication.checkToken("admin"), ServiceInstanceController.getList)
   .post(Authentication.checkToken("admin"), ServiceInstanceController.create);
 routes.route("/serviceInstances/:id")
   .get(ServiceInstanceController.getWithId)

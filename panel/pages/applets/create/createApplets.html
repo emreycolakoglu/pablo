@@ -39,7 +39,7 @@
         <div class="col-xs-12">
           <h3>Add Account</h3>
           <div class="row">
-            <form class="form col-xs-12" name="userpassform" ng-if="self.selectedService.authenticationMethod == 1" ng-submit="self.saveServiceUserPassCredentials()">
+            <form class="form col-xs-12 col-md-8" name="userpassform" ng-if="self.selectedService.authenticationMethod == 1" ng-submit="self.saveServiceUserPassCredentials()">
               <div class="form-group">
                 <label>Username</label>
                 <input type="text" class="form-control" ng-model="self.tempAuthData.username" required>
@@ -59,6 +59,16 @@
                 <button class="btn btn-warning" type="button" ng-click="self.step = self.step - 1">Geri</button>
               </div>
             </form>
+            <div class="col-xs-12 col-md-4">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h3 class="panel-title">Existing Instances</h3>
+                </div>
+                <div class="panel-body">
+                  <button class="btn btn-info btn-sm" ng-repeat="instance in self.serviceInstances" ng-click="self.selectExistingServiceInstance(instance)">{{instance.endpoint}}</button>
+                </div>
+              </div>
+            </div>
             <div class="col-xs-12" ng-if="self.selectedService.authenticationMethod == 2">
               <div>
                 <button class="btn btn-info btn-block" type="submit">Authorize</button>
