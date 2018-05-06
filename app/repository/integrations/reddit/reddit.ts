@@ -12,17 +12,19 @@ export async function getHotListOf(source: string): Promise<RedditT3Link[]> {
     method: "GET",
     url: `https://www.reddit.com/${source}/hot/.json`
   };
-  request(client, function (err: any, httpResponse: any, result: RedditListingEntity) {
+  request(client, function(
+    err: any,
+    httpResponse: any,
+    result: RedditListingEntity
+  ) {
     if (!err && httpResponse.statusCode == 200) {
       if (result && result.data && result.data.children) {
         d.resolve(result.data.children);
-      }
-      else {
+      } else {
         logger.error("Reddit, getHotListOf, children yok galiba");
         d.reject({ message: "Reddit, getHotListOf, children yok galiba" });
       }
-    }
-    else {
+    } else {
       logger.error("reddit provider: get comments error", err);
       d.reject(err);
     }
@@ -40,16 +42,18 @@ export async function getSinglePost(postLink: string): Promise<RedditT3Link> {
     url: postLink.replace(/[^\w.:/\s]/gi, "") + ".json"
   };
 
-  request(client, function (err: any, httpResponse: any, result: RedditListingEntity[]) {
+  request(client, function(
+    err: any,
+    httpResponse: any,
+    result: RedditListingEntity[]
+  ) {
     if (!err && httpResponse.statusCode == 200) {
       if (result && result[0] && result[0].data.children.length > 0) {
         d.resolve(result[0].data.children[0]);
-      }
-      else {
+      } else {
         d.reject({ message: "Reddit, getSinglePost, children yok galiba" });
       }
-    }
-    else {
+    } else {
       logger.error(err);
       d.reject(err);
     }
@@ -71,19 +75,23 @@ export async function getCommentsOfPost(postLink: string): Promise<string[]> {
     url: postLink.replace(/[^\w.:/\s]/gi, "") + ".json"
   };
 
-  request(client, function (err: any, httpResponse: any, result: RedditListingEntity[]) {
+  request(client, function(
+    err: any,
+    httpResponse: any,
+    result: RedditListingEntity[]
+  ) {
     if (!err && httpResponse.statusCode == 200) {
       if (result && result[1] && result[1].data.children.length > 0) {
-        const r: string[] = result[1].data.children.map((comment: RedditT1Comment) => comment.data.body);
+        const r: string[] = result[1].data.children.map(
+          (comment: RedditT1Comment) => comment.data.body
+        );
         logger.debug(`${r.length} comments scraped`);
         d.resolve(r);
-      }
-      else {
+      } else {
         logger.debug(`0 comments scraped`);
         d.resolve([]);
       }
-    }
-    else {
+    } else {
       logger.error("reddit provider: get comments error", err);
       d.reject(err);
     }
@@ -108,4 +116,20 @@ export function prepareCommentsHtml(comments: string[]): string {
   });
   html += `</div>`;
   return html;
+}
+
+/**
+ * gif vs tipleri ayiklar
+ * @param posts postlar
+ */
+export function filterNonImages(posts: RedditT3Link[]): RedditT3Link[] {
+  posts = posts.filter((post: RedditT3Link) => {
+    return (
+      post.data.url.endsWith("png") ||
+      post.data.url.endsWith("jpg") ||
+      post.data.url.endsWith("jpeg") ||
+      post.data.url.endsWith("gif")
+    );
+  });
+  return posts;
 }

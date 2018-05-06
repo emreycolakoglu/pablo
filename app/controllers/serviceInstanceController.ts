@@ -49,4 +49,12 @@ export default class ServiceController {
       res.status(500).send({ message: error.message });
     });
   }
+
+  public static async usersServiceInstances(req, res) {
+    ServiceInstanceRepository.usersServiceInstances(req.userid, req.query).then((ds: IMongoServiceInstance[]) => {
+      res.json(ds);
+    }).catch((error: any) => {
+      res.status(500).send({ message: error.message });
+    });
+  }
 }

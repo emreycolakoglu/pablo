@@ -34,7 +34,7 @@ routes.route("/services/:id/actions")
   .get(ServiceActionController.getActionsOfService);
 
 routes.route("/serviceInstances")
-  .get(ServiceInstanceController.getList)
+  .get(Authentication.checkToken("admin"), ServiceInstanceController.usersServiceInstances)
   .post(Authentication.checkToken("admin"), ServiceInstanceController.create);
 routes.route("/serviceInstances/:id")
   .get(ServiceInstanceController.getWithId)

@@ -6,21 +6,41 @@
  */
 
 import * as Q from "q";
-import { getInputWithName, IServiceActionInput, IMongoServiceActionInstance } from "../../../database/models";
-import { getHotListOf, RedditT3Link, forceSsl, getCommentsOfPost, prepareCommentsHtml } from "../../integrations/reddit";
+import {
+  getInputWithName,
+  IServiceActionInput,
+  IMongoServiceActionInstance
+} from "../../../database/models";
+import {
+  getHotListOf,
+  RedditT3Link,
+  forceSsl,
+  getCommentsOfPost,
+  prepareCommentsHtml,
+  filterNonImages
+} from "../../integrations/reddit";
 import { difference } from "lodash";
 import logger from "../../../logger";
 
 export class RedditRepository {
-  public static async checkHotPost(actionInstance: IMongoServiceActionInstance, previousActionInstance: IMongoServiceActionInstance) {
+  public static async checkHotPost(
+    actionInstance: IMongoServiceActionInstance,
+    previousActionInstance: IMongoServiceActionInstance
+  ) {
     const d = Q.defer();
 
     logger.debug(`starting checkHotPost`);
     try {
       /** subreddit ismini oku */
-      const subreddit: IServiceActionInput = getInputWithName(actionInstance.inputs, "name");
+      const subreddit: IServiceActionInput = getInputWithName(
+        actionInstance.inputs,
+        "name"
+      );
       /** postları çek */
-      const redditPosts: RedditT3Link[] = await getHotListOf((subreddit as any).value);
+      let redditPosts: RedditT3Link[] = await getHotListOf(
+        (subreddit as any).value
+      );
+      redditPosts = filterNonImages(redditPosts);
       logger.debug(`got ${redditPosts.length} posts`);
 
       const ids: string[] = redditPosts
@@ -35,7 +55,9 @@ export class RedditRepository {
           // yeni post var
           logger.debug(`found ${newIds.length} new posts`);
           const newPost = redditPosts.find(item => item.data.id == newIds[0]);
-          const comments: string[] = await getCommentsOfPost(newPost.data.permalink);
+          const comments: string[] = await getCommentsOfPost(
+            newPost.data.permalink
+          );
 
           actionInstance.outputs = [];
           actionInstance.outputs.push({
@@ -80,8 +102,7 @@ export class RedditRepository {
           await actionInstance.save();
 
           d.resolve(actionInstance);
-        }
-        else {
+        } else {
           // yeni bir post bulamadik
           // outputlari temizle
           logger.debug(`couldn't find new post`);
@@ -89,8 +110,7 @@ export class RedditRepository {
           await actionInstance.save();
           d.resolve(actionInstance);
         }
-      }
-      else {
+      } else {
         // daha onceden hic post datasi kaydetmemisiz
         // bir sonraki check icin payload guncelle
         actionInstance.payload = ids;

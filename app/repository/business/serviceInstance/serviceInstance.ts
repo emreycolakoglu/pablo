@@ -83,4 +83,22 @@ export class ServiceInstanceRepository {
 
     return d.promise;
   }
+
+  public static async usersServiceInstances(userId: any, query: any): Promise<IServiceInstance[]> {
+    const d = Q.defer<IServiceInstance[]>();
+
+    ServiceInstanceSchema.find({
+      owner: userId,
+      serviceType: query.type
+    })
+      .skip(query.skip)
+      .limit(query.take)
+      .then((result: IMongoServiceInstance[]) => {
+        d.resolve(result);
+      }).catch((err: any) => {
+        d.reject(err);
+      });
+
+    return d.promise;
+  }
 }
