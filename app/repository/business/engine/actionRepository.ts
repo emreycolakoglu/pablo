@@ -26,6 +26,24 @@ export class ActionRepository {
           d.reject(error);
         });
         break;
+      case "get-top-list-of-subreddit":
+        RedditRepository.checkTopPost(action, previousAction).then((actionResult: any) => {
+          logger.debug(`reddit action '${action.serviceAction.name}' is resolving`);
+          d.resolve(actionResult);
+        }).catch((error) => {
+          logger.error(`reddit action '${action.serviceAction.name}' is rejecting, ${error}`);
+          d.reject(error);
+        });
+        break;
+      case "get-new-list-of-subreddit":
+        RedditRepository.checkNewPost(action, previousAction).then((actionResult: any) => {
+          logger.debug(`reddit action '${action.serviceAction.name}' is resolving`);
+          d.resolve(actionResult);
+        }).catch((error) => {
+          logger.error(`reddit action '${action.serviceAction.name}' is rejecting, ${error}`);
+          d.reject(error);
+        });
+        break;
       default:
         break;
     }
