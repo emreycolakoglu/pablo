@@ -11,7 +11,6 @@ import { Engine } from "./repository/business/engine";
 import logger from "./logger";
 // Creates and configures an ExpressJS web server.
 class App {
-
   // ref to Express instance
   public express: express.Application;
 
@@ -38,13 +37,16 @@ class App {
 
   // Configure API endpoints.
   private routes(): void {
-    this.express.get("/", function (req, res) {
+    this.express.get("/", function(req, res) {
       res.render("index");
     });
-    this.express.get("/panel", function (req, res) {
+    this.express.get("/panel", function(req, res) {
       res.render("panel");
     });
-    this.express.use("/node_modules", express.static(path.join(__dirname, "../node_modules")));
+    this.express.use(
+      "/node_modules",
+      express.static(path.join(__dirname, "../node_modules"))
+    );
     this.express.use("/asset", express.static(path.join(__dirname, "./panel")));
     this.express.use("/api", <express.Router>routes);
   }
@@ -54,8 +56,7 @@ class App {
     const promise = mongoose.connect(process.env.MONGOSTRING, (err: any) => {
       if (err) {
         logger.error(err);
-      }
-      else {
+      } else {
         logger.info("Mongoose running");
       }
     });
