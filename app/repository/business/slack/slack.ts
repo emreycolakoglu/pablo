@@ -3,28 +3,55 @@
  */
 
 import * as Q from "q";
-import { getInputWithName, replacePlaceholderInInput, IServiceActionInput, IMongoServiceActionInstance, inputNeedsReplacing } from "../../../database/models";
+import {
+  getInputWithName,
+  replacePlaceholderInInput,
+  IServiceActionInput,
+  IMongoServiceActionInstance,
+  inputNeedsReplacing
+} from "../../../database/models";
 import { Slack } from "../../integrations/slack";
 import { difference } from "lodash";
 import logger from "../../../logger";
 
 export class SlackRepository {
-  public static async sendMessage(actionInstance: IMongoServiceActionInstance, previousActionInstance: IMongoServiceActionInstance) {
+  public static async sendMessage(
+    actionInstance: IMongoServiceActionInstance,
+    previousActionInstance: IMongoServiceActionInstance
+  ) {
     const d = Q.defer();
 
     logger.debug(`starting sendMessage`);
     try {
-      const messageInput: IServiceActionInput = getInputWithName(actionInstance.inputs, "message");
+      const messageInput: IServiceActionInput = getInputWithName(
+        actionInstance.inputs,
+        "message"
+      );
       if (inputNeedsReplacing(messageInput.value))
-        messageInput.value = replacePlaceholderInInput(messageInput.value, previousActionInstance.outputs);
+        messageInput.value = replacePlaceholderInInput(
+          messageInput.value,
+          previousActionInstance.outputs
+        );
 
-      const channelInput: IServiceActionInput = getInputWithName(actionInstance.inputs, "channel");
+      const channelInput: IServiceActionInput = getInputWithName(
+        actionInstance.inputs,
+        "channel"
+      );
       if (inputNeedsReplacing(channelInput.value))
-        channelInput.value = replacePlaceholderInInput(channelInput.value, previousActionInstance.outputs);
+        channelInput.value = replacePlaceholderInInput(
+          channelInput.value,
+          previousActionInstance.outputs
+        );
 
-      const webHookUrlInput: IServiceActionInput = getInputWithName(actionInstance.inputs, "webHookUrl");
+      const webHookUrlInput: IServiceActionInput = getInputWithName(
+        actionInstance.inputs,
+        "webHookUrl"
+      );
       if (inputNeedsReplacing(webHookUrlInput.value))
-        webHookUrlInput.value = replacePlaceholderInInput(webHookUrlInput.value, previousActionInstance.outputs);
+        webHookUrlInput.value = replacePlaceholderInInput(
+          webHookUrlInput.value,
+          previousActionInstance.outputs
+        );
 
       logger.debug(`slack repository prepared data to be sent`);
 
@@ -38,10 +65,10 @@ export class SlackRepository {
             type: 1
           });
           return actionInstance.save();
-        }).then(() => {
+        })
+        .then(() => {
           d.resolve(actionInstance);
         });
-
     } catch (error) {
       logger.error(error);
       actionInstance.outputs = [];

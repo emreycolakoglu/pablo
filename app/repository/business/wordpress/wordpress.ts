@@ -1,11 +1,26 @@
 import * as Q from "q";
-import { getInputWithName, replacePlaceholderInInput, IServiceActionInput, IMongoServiceActionInstance, inputNeedsReplacing } from "../../../database/models";
-import { WordpressIntegration, WordpressPostResponse, WordpressPostRequest, WordpressAuthData, WordpressAjaxPost } from "../../integrations/wordpress";
+import {
+  getInputWithName,
+  replacePlaceholderInInput,
+  IServiceActionInput,
+  IMongoServiceActionInstance,
+  inputNeedsReplacing
+} from "../../../database/models";
+import {
+  WordpressIntegration,
+  WordpressPostResponse,
+  WordpressPostRequest,
+  WordpressAuthData,
+  WordpressAjaxPost
+} from "../../integrations/wordpress";
 import { difference } from "lodash";
 import logger from "../../../logger";
 
 export class WordpressRepository {
-  public static async getLastPosts(actionInstance: IMongoServiceActionInstance, previousActionInstance: IMongoServiceActionInstance) {
+  public static async getLastPosts(
+    actionInstance: IMongoServiceActionInstance,
+    previousActionInstance: IMongoServiceActionInstance
+  ) {
     const d = Q.defer();
 
     logger.debug(`starting wordpress getlastpots`);
@@ -44,8 +59,7 @@ export class WordpressRepository {
           await actionInstance.save();
 
           d.resolve(actionInstance);
-        }
-        else {
+        } else {
           // yeni bir post bulamadik
           // outputlari temizle
           actionInstance.outputs = [];
@@ -53,8 +67,7 @@ export class WordpressRepository {
           logger.debug(`couldn't find new post`);
           d.resolve(actionInstance);
         }
-      }
-      else {
+      } else {
         // daha onceden hic post datasi kaydetmemisiz
         // bir sonraki check icin payload guncelle
         actionInstance.payload = ids;
@@ -69,7 +82,10 @@ export class WordpressRepository {
     return d.promise;
   }
 
-  public static async newPost(actionInstance: IMongoServiceActionInstance, previousActionInstance: IMongoServiceActionInstance) {
+  public static async newPost(
+    actionInstance: IMongoServiceActionInstance,
+    previousActionInstance: IMongoServiceActionInstance
+  ) {
     const d = Q.defer();
 
     logger.debug(`starting wordpress newPost`);
@@ -78,21 +94,45 @@ export class WordpressRepository {
       const username: string = actionInstance.serviceInstance.username;
       const password: string = actionInstance.serviceInstance.password;
 
-      const title: IServiceActionInput = getInputWithName(actionInstance.inputs, "title");
+      const title: IServiceActionInput = getInputWithName(
+        actionInstance.inputs,
+        "title"
+      );
       if (inputNeedsReplacing(title.value))
-        title.value = replacePlaceholderInInput(title.value, previousActionInstance.outputs);
+        title.value = replacePlaceholderInInput(
+          title.value,
+          previousActionInstance.outputs
+        );
 
-      const thumbnail: IServiceActionInput = getInputWithName(actionInstance.inputs, "thumbnail");
+      const thumbnail: IServiceActionInput = getInputWithName(
+        actionInstance.inputs,
+        "thumbnail"
+      );
       if (inputNeedsReplacing(thumbnail.value))
-        thumbnail.value = replacePlaceholderInInput(thumbnail.value, previousActionInstance.outputs);
+        thumbnail.value = replacePlaceholderInInput(
+          thumbnail.value,
+          previousActionInstance.outputs
+        );
 
-      const categoryId: IServiceActionInput = getInputWithName(actionInstance.inputs, "categoryId");
+      const categoryId: IServiceActionInput = getInputWithName(
+        actionInstance.inputs,
+        "categoryId"
+      );
       if (inputNeedsReplacing(categoryId.value))
-        categoryId.value = replacePlaceholderInInput(categoryId.value, previousActionInstance.outputs);
+        categoryId.value = replacePlaceholderInInput(
+          categoryId.value,
+          previousActionInstance.outputs
+        );
 
-      const body: IServiceActionInput = getInputWithName(actionInstance.inputs, "body");
+      const body: IServiceActionInput = getInputWithName(
+        actionInstance.inputs,
+        "body"
+      );
       if (inputNeedsReplacing(body.value))
-        body.value = replacePlaceholderInInput(body.value, previousActionInstance.outputs);
+        body.value = replacePlaceholderInInput(
+          body.value,
+          previousActionInstance.outputs
+        );
 
       const wpClient = new WordpressIntegration({
         endpoint: endpoint,
@@ -100,37 +140,41 @@ export class WordpressRepository {
         password: password
       });
 
-      const newPost = await wpClient.post({
-        title: title.value,
-        content: body.value,
-        format: "image",
-        categories: categoryId.value,
-        thumbnail: thumbnail.value
-      }).then((newPostResponse: WordpressPostResponse) => {
-        return wpClient.publish(newPostResponse.id);
-      }).then((publishResponse: WordpressPostResponse) => {
-        actionInstance.outputs = [];
-        actionInstance.outputs.push({
-          name: "postId",
-          key: "postId",
-          value: publishResponse.id,
-          type: 1
+      const newPost = await wpClient
+        .post({
+          title: title.value,
+          content: body.value,
+          format: "image",
+          categories: categoryId.value,
+          thumbnail: thumbnail.value
+        })
+        .then((newPostResponse: WordpressPostResponse) => {
+          return wpClient.publish(newPostResponse.id);
+        })
+        .then((publishResponse: WordpressPostResponse) => {
+          actionInstance.outputs = [];
+          actionInstance.outputs.push({
+            name: "postId",
+            key: "postId",
+            value: publishResponse.id,
+            type: 1
+          });
+          actionInstance.outputs.push({
+            name: "postUrl",
+            key: "postUrl",
+            value: publishResponse.slug,
+            type: 1
+          });
+          return actionInstance.save();
+        })
+        .then((actionInstance: IMongoServiceActionInstance) => {
+          logger.debug(`finished wordpress newPost with success`);
+          d.resolve(actionInstance);
+        })
+        .catch((error: any) => {
+          logger.error(error.message);
+          d.reject(error);
         });
-        actionInstance.outputs.push({
-          name: "portUrl",
-          key: "portUrl",
-          value: publishResponse.slug,
-          type: 1
-        });
-        return actionInstance.save();
-      }).then((actionInstance: IMongoServiceActionInstance) => {
-        logger.debug(`finished wordpress newPost with success`);
-        d.resolve(actionInstance);
-      }).catch((error: any) => {
-        logger.error(error.message);
-        d.reject(error);
-      });
-
     } catch (error) {
       logger.error(`${error.message}`);
       d.reject(error);

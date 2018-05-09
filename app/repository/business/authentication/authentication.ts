@@ -17,17 +17,18 @@ export class Authentication {
           password: password,
           name: email,
           roles: ["user"]
-        }).then((newUser: IMongoUser) => {
-          const token = this.generateToken(newUser);
-          d.resolve({
-            user: newUser,
-            token: token
+        })
+          .then((newUser: IMongoUser) => {
+            const token = this.generateToken(newUser);
+            d.resolve({
+              user: newUser,
+              token: token
+            });
+          })
+          .catch((error: any) => {
+            d.reject(error);
           });
-        }).catch((error: any) => {
-          d.reject(error);
-        });
-      }
-      else {
+      } else {
         d.resolve(undefined);
       }
     } catch (error) {
@@ -43,29 +44,32 @@ export class Authentication {
     UserSchema.findOne({
       email: email,
       password: password
-    }).then((existingUser: IMongoUser) => {
-      if (existingUser) {
-        const token = this.generateToken(existingUser);
-        d.resolve({
-          user: existingUser,
-          token: token
-        });
-      }
-      else {
-        d.reject({
-          message: "No user found"
-        });
-      }
-    }).catch((error: any) => {
-      d.reject(error);
-    });
+    })
+      .then((existingUser: IMongoUser) => {
+        if (existingUser) {
+          const token = this.generateToken(existingUser);
+          d.resolve({
+            user: existingUser,
+            token: token
+          });
+        } else {
+          d.reject({
+            message: "No user found"
+          });
+        }
+      })
+      .catch((error: any) => {
+        d.reject(error);
+      });
 
     return d.promise;
   }
 
   public static checkToken(role: string) {
-    return function (req: any, res: any, next: any) {
-      const tokenParts = req.headers["authorization"] ? req.headers["authorization"].split(" ") : [];
+    return function(req: any, res: any, next: any) {
+      const tokenParts = req.headers["authorization"]
+        ? req.headers["authorization"].split(" ")
+        : [];
       if (tokenParts.length < 2) {
         logger.error("token yoktu");
         res.sendStatus(403);
@@ -73,24 +77,21 @@ export class Authentication {
       const token = tokenParts[1];
 
       if (token) {
-        jwt.verify(token, process.env.JWTSECRET, function (err, decoded) {
+        jwt.verify(token, process.env.JWTSECRET, function(err, decoded) {
           if (err) {
             logger.error(err.message);
             res.send(err);
-          }
-          else {
+          } else {
             // auth logic
             try {
               if (decoded.userid) {
                 req.userid = decoded.userid;
-              }
-              else {
+              } else {
                 res.sendStatus(403);
               }
               if (decoded.roles.indexOf(role) > -1) {
                 next();
-              }
-              else {
+              } else {
                 res.sendStatus(403);
               }
             } catch (e) {
@@ -99,8 +100,7 @@ export class Authentication {
             }
           }
         });
-      }
-      else {
+      } else {
         logger.error("token yoktu");
         res.sendStatus(403);
       }
@@ -112,11 +112,13 @@ export class Authentication {
 
     UserSchema.findOne({
       email: email
-    }).then((existingUser: IUser) => {
-      d.resolve(existingUser);
-    }).catch((error: any) => {
-      d.reject(error);
-    });
+    })
+      .then((existingUser: IUser) => {
+        d.resolve(existingUser);
+      })
+      .catch((error: any) => {
+        d.reject(error);
+      });
 
     return d.promise;
   }
@@ -127,9 +129,10 @@ export class Authentication {
       userid: user.id,
       roles: user.roles,
       iat: moment().unix(),
-      exp: moment().add(14, "days").unix()
+      exp: moment()
+        .add(14, "days")
+        .unix()
     };
     return jwt.sign(payload, process.env.JWTSECRET);
   }
-
 }

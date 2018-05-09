@@ -12,20 +12,24 @@ const serviceInstanceSchema = new Schema({
   endpoint: { type: String },
   createdAt: { type: Date, required: false },
   modifiedAt: { type: Date, required: false }
-})
-  .pre("save", function (next) {
-    if (this._doc) {
-      const doc = <IMongoServiceInstance>this._doc;
-      const now = new Date();
-      if (!doc.createdAt) {
-        doc.createdAt = now;
-      }
-      doc.modifiedAt = now;
+}).pre("save", function(next) {
+  if (this._doc) {
+    const doc = <IMongoServiceInstance>this._doc;
+    const now = new Date();
+    if (!doc.createdAt) {
+      doc.createdAt = now;
     }
-    next();
-    return this;
-  });
+    doc.modifiedAt = now;
+  }
+  next();
+  return this;
+});
 
 serviceInstanceSchema.set("toJSON", { virtuals: true });
 
-export let ServiceInstanceSchema = model<IMongoServiceInstance>("ServiceInstance", serviceInstanceSchema, "serviceInstances", true);
+export let ServiceInstanceSchema = model<IMongoServiceInstance>(
+  "ServiceInstance",
+  serviceInstanceSchema,
+  "serviceInstances",
+  true
+);

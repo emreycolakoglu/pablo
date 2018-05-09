@@ -173,7 +173,7 @@ export interface RedditCommentData {
   preview: {
     images: RedditImage[];
     enabled: boolean;
-};
+  };
   num_comments: number;
   thumbnail: string;
   subreddit_id: string;

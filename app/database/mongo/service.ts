@@ -11,20 +11,19 @@ const serviceSchema = new Schema({
   authenticationMethod: { type: Number },
   createdAt: { type: Date, required: false },
   modifiedAt: { type: Date, required: false }
-})
-  .pre("save", function (next) {
-    if (this._doc) {
-      const doc = <IMongoService>this._doc;
-      const now = new Date();
-      doc.key = slug(doc.name.toLowerCase());
-      if (!doc.createdAt) {
-        doc.createdAt = now;
-      }
-      doc.modifiedAt = now;
+}).pre("save", function(next) {
+  if (this._doc) {
+    const doc = <IMongoService>this._doc;
+    const now = new Date();
+    doc.key = slug(doc.name.toLowerCase());
+    if (!doc.createdAt) {
+      doc.createdAt = now;
     }
-    next();
-    return this;
-  });
+    doc.modifiedAt = now;
+  }
+  next();
+  return this;
+});
 
 serviceSchema.virtual("actions", {
   ref: "ServiceAction",
@@ -34,4 +33,9 @@ serviceSchema.virtual("actions", {
 
 serviceSchema.set("toJSON", { virtuals: true });
 
-export let ServiceSchema = model<IMongoService>("Service", serviceSchema, "services", true);
+export let ServiceSchema = model<IMongoService>(
+  "Service",
+  serviceSchema,
+  "services",
+  true
+);

@@ -2,7 +2,7 @@ import * as Q from "q";
 import * as request from "request";
 import * as cheerio from "cheerio";
 
-export class StumbleUpon {
+export class StumbleUponClient {
   constructor(username: string, password: string) {
     this._username = username;
     this._password = password;

@@ -10,21 +10,25 @@ const serviceActionSchema = new Schema({
   outputs: [{ type: Schema.Types.Mixed }],
   createdAt: { type: Date, required: false },
   modifiedAt: { type: Date, required: false }
-})
-  .pre("save", function (next) {
-    if (this._doc) {
-      const doc = <IMongoServiceAction>this._doc;
-      const now = new Date();
-      doc.key = slug(doc.name.toLowerCase());
-      if (!doc.createdAt) {
-        doc.createdAt = now;
-      }
-      doc.modifiedAt = now;
+}).pre("save", function(next) {
+  if (this._doc) {
+    const doc = <IMongoServiceAction>this._doc;
+    const now = new Date();
+    doc.key = slug(doc.name.toLowerCase());
+    if (!doc.createdAt) {
+      doc.createdAt = now;
     }
-    next();
-    return this;
-  });
+    doc.modifiedAt = now;
+  }
+  next();
+  return this;
+});
 
 serviceActionSchema.set("toJSON", { virtuals: true });
 
-export let ServiceActionSchema = model<IMongoServiceAction>("ServiceAction", serviceActionSchema, "serviceActions", true);
+export let ServiceActionSchema = model<IMongoServiceAction>(
+  "ServiceAction",
+  serviceActionSchema,
+  "serviceActions",
+  true
+);

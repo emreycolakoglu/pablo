@@ -6,11 +6,13 @@ export class ServiceRepository {
   public static async create(request: any): Promise<IService> {
     const d = Q.defer<IService>();
 
-    ServiceSchema.create(request).then((newService: IMongoService) => {
-      d.resolve(newService);
-    }).catch((error: any) => {
-      d.reject(error);
-    });
+    ServiceSchema.create(request)
+      .then((newService: IMongoService) => {
+        d.resolve(newService);
+      })
+      .catch((error: any) => {
+        d.reject(error);
+      });
 
     return d.promise;
   }
@@ -18,11 +20,13 @@ export class ServiceRepository {
   public static async get(id: string): Promise<IService> {
     const d = Q.defer<IService>();
 
-    ServiceSchema.findById(id).then((result: IMongoService) => {
-      d.resolve(result);
-    }).catch((err: any) => {
-      d.reject(err);
-    });
+    ServiceSchema.findById(id)
+      .then((result: IMongoService) => {
+        d.resolve(result);
+      })
+      .catch((err: any) => {
+        d.reject(err);
+      });
 
     return d.promise;
   }
@@ -30,11 +34,13 @@ export class ServiceRepository {
   public static async update(id: string, request: any): Promise<IService> {
     const d = Q.defer<IService>();
 
-    ServiceSchema.findByIdAndUpdate(id, request, { upsert: true }).then((result: IMongoService) => {
-      d.resolve(result);
-    }).catch((err: any) => {
-      d.reject(err);
-    });
+    ServiceSchema.findByIdAndUpdate(id, request, { upsert: true })
+      .then((result: IMongoService) => {
+        d.resolve(result);
+      })
+      .catch((err: any) => {
+        d.reject(err);
+      });
 
     return d.promise;
   }
@@ -42,17 +48,20 @@ export class ServiceRepository {
   public static async patch(id: string, request: any): Promise<IService> {
     const d = Q.defer<IService>();
 
-    ServiceSchema.findById(id).then((result: IMongoService) => {
-      delete request._id;
-      for (const property in request) {
-        result[property] = request[property];
-      }
-      return result.save();
-    }).then((result: IMongoService) => {
-      d.resolve(result);
-    }).catch((err: any) => {
-      d.reject(err);
-    });
+    ServiceSchema.findById(id)
+      .then((result: IMongoService) => {
+        delete request._id;
+        for (const property in request) {
+          result[property] = request[property];
+        }
+        return result.save();
+      })
+      .then((result: IMongoService) => {
+        d.resolve(result);
+      })
+      .catch((err: any) => {
+        d.reject(err);
+      });
 
     return d.promise;
   }
@@ -60,11 +69,13 @@ export class ServiceRepository {
   public static async delete(id: string): Promise<boolean> {
     const d = Q.defer<boolean>();
 
-    ServiceSchema.findByIdAndRemove(id).then((result: IMongoService) => {
-      d.resolve(true);
-    }).catch((err: any) => {
-      d.reject(err);
-    });
+    ServiceSchema.findByIdAndRemove(id)
+      .then((result: IMongoService) => {
+        d.resolve(true);
+      })
+      .catch((err: any) => {
+        d.reject(err);
+      });
 
     return d.promise;
   }
@@ -78,7 +89,8 @@ export class ServiceRepository {
       .limit(query.take)
       .then((result: IService[]) => {
         d.resolve(result);
-      }).catch((err: any) => {
+      })
+      .catch((err: any) => {
         d.reject(err);
       });
 

@@ -7,7 +7,7 @@ import { WordpressIntegration, WordpressAuthData } from "./";
 const should = chai.should();
 
 describe("wordpress", () => {
-  it("should create posts", () => {
+  /*it("should create posts", () => {
     const authOptions: WordpressAuthData = {
       endpoint: undefined,
       password: undefined,
@@ -25,17 +25,16 @@ describe("wordpress", () => {
       result.should.have.property("_success");
       result["_success"].should.be.eql(true);
     });
-  });
-  it.only("should get last posts", () => {
+  });*/
+  it("should get last posts", () => {
     const authOptions: WordpressAuthData = {
       endpoint: "https://webrazzi.com/wp-json",
       password: undefined,
       username: undefined
     };
     const client = new WordpressIntegration(authOptions);
-    return client.getLastPosts()
-      .then((result: any[] )=> {
-        result.should.be.a("array");
-      });
-  })
+    return client.getLastPosts().then((result: any[]) => {
+      result.should.be.a("array");
+    });
+  });
 });
