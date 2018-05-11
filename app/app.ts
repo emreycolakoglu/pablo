@@ -5,6 +5,7 @@ import * as bodyParser from "body-parser";
 import * as mongoose from "mongoose";
 import * as helmet from "helmet";
 import * as compression from "compression";
+import * as raven from "raven";
 import routes from "./routes";
 import * as cors from "cors";
 import { Engine } from "./repository/business/engine";
@@ -25,6 +26,11 @@ class App {
 
   // Configure Express middleware.
   private middleware(): void {
+    if (process.env.SENTRY) {
+      raven.config(process.env.SENTRY).install();
+      this.express.use(raven.requestHandler());
+      this.express.use(raven.errorHandler());
+    }
     this.express.use(morgan("dev"));
     this.express.use(bodyParser.json());
     this.express.use(bodyParser.urlencoded({ extended: false }));
