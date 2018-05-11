@@ -140,7 +140,7 @@ export class WordpressRepository {
         password: password
       });
 
-      const newPost = await wpClient
+      wpClient
         .post({
           title: title.value,
           content: body.value,
@@ -162,7 +162,7 @@ export class WordpressRepository {
           actionInstance.outputs.push({
             name: "postUrl",
             key: "postUrl",
-            value: publishResponse.slug,
+            value: publishResponse.link,
             type: 1
           });
           return actionInstance.save();

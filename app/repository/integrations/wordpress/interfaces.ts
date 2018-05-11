@@ -11,6 +11,7 @@ export interface WordpressPostResponse {
   id: number;
   date: Date;
   slug: string;
+  link: string;
   status: string;
   title: {
     raw: string,

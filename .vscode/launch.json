@@ -9,13 +9,9 @@
       "request": "launch",
       "name": "Launch Program",
       "program": "${workspaceFolder}/dist/index.js",
-      //"preLaunchTask": "tsc: build - tsconfig.json",
       "env": {
-        "NODE_ENV":"test"
-      },
-      "outFiles": [
-        "${workspaceFolder}/dist/**/*.js"
-      ]
+        "NODE_ENV": "test"
+      }
     }
   ]
 }

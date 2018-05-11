@@ -9,10 +9,12 @@ import {
 } from "../../../database/mongo";
 import {
   IServiceActionInstance,
-  IMongoServiceActionInstance
+  IMongoServiceActionInstance,
+  IMongoServiceAction
 } from "../../../database/models";
 import { RedditRepository } from "../reddit";
 import { SlackRepository } from "../slack";
+import { sortBy } from "lodash";
 
 export class Engine {
   private static _events = [
@@ -58,7 +60,6 @@ export class Engine {
       .lt(Date.now())
       .populate({
         path: "actions",
-        options: { sort: { order: 1 } },
         populate: {
           path: "serviceActions"
         }
@@ -74,6 +75,8 @@ export class Engine {
               .add(applet.interval, "s")
               .toDate();
             applet.save();
+
+            applet.actions = sortBy(applet.actions, ["order"]);
 
             self.chainActions(applet.actions).then(
               function(result) {

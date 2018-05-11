@@ -29,17 +29,17 @@ export class StumbleuponRepository {
       if (inputNeedsReplacing(url.value))
         url.value = replacePlaceholderInInput(
           url.value,
-          previousActionInstance.outputs
+          previousActionInstance.outputs,
         );
 
       client
-        .postToStumbleUpon(url.value, "Pornography")
+        .postToStumbleUpon(url.value, "Pornography", undefined, true, undefined)
         .then((stumbleuponResult: any) => {
           actionInstance.outputs = [];
           actionInstance.outputs.push({
             name: "success",
             key: "success",
-            value: true,
+            value: stumbleuponResult._success,
             type: 1
           });
 

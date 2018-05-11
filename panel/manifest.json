@@ -1,0 +1,26 @@
+{
+  "name": "Pablo",
+  "short_name": "Pablo",
+  "theme_color": "#000000",
+  "background_color": "#919191",
+  "display": "standalone",
+  "orientation": "portrait",
+  "scope": "/",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "vendor/sbadmin/logo.png",
+      "sizes": "64x64",
+      "type": "image/png"
+    },
+    {
+      "src": "vendor/sbadmin/logo.png",
+      "sizes": "128x128",
+      "density": 2
+    },
+    {
+      "src": "vendor/sbadmin/logo.png",
+      "sizes": "256x256"
+    }
+  ]
+}
