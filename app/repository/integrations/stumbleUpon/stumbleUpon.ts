@@ -1,6 +1,7 @@
 import * as Q from "q";
 import * as request from "request";
 import * as cheerio from "cheerio";
+import { StumbleUponPostResult } from "./";
 
 export class StumbleUponClient {
   constructor(username: string, password: string) {
@@ -24,8 +25,8 @@ export class StumbleUponClient {
     message: string = "",
     nsfw: boolean = false,
     tags: any = undefined
-  ) {
-    const d = Q.defer();
+  ): Q.Promise<StumbleUponPostResult> {
+    const d = Q.defer<StumbleUponPostResult>();
     const self = this;
 
     self

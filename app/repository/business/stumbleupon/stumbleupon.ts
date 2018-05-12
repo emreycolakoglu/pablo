@@ -1,5 +1,8 @@
 import * as Q from "q";
-import { StumbleUponClient } from "../../integrations/stumbleUpon";
+import {
+  StumbleUponClient,
+  StumbleUponPostResult
+} from "../../integrations/stumbleUpon";
 import logger from "../../../logger";
 import {
   IMongoServiceActionInstance,
@@ -29,17 +32,20 @@ export class StumbleuponRepository {
       if (inputNeedsReplacing(url.value))
         url.value = replacePlaceholderInInput(
           url.value,
-          previousActionInstance.outputs,
+          previousActionInstance.outputs
         );
 
       client
         .postToStumbleUpon(url.value, "Pornography", undefined, true, undefined)
-        .then((stumbleuponResult: any) => {
+        .then((stumbleuponResult: StumbleUponPostResult) => {
+          const output: any = stumbleuponResult._success
+            ? stumbleuponResult._success
+            : `${stumbleuponResult._reason[0].code} ${stumbleuponResult._reason[0].message}`;
           actionInstance.outputs = [];
           actionInstance.outputs.push({
             name: "success",
             key: "success",
-            value: stumbleuponResult._success,
+            value: output,
             type: 1
           });
 
