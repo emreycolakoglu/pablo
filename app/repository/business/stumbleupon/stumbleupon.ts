@@ -40,7 +40,7 @@ export class StumbleuponRepository {
         .then((stumbleuponResult: StumbleUponPostResult) => {
           const output: any = stumbleuponResult._success
             ? stumbleuponResult._success
-            : `${stumbleuponResult._reason[0].code} ${stumbleuponResult._reason[0].message}`;
+            : `${JSON.stringify(stumbleuponResult._reason)}`;
           actionInstance.outputs = [];
           actionInstance.outputs.push({
             name: "success",
