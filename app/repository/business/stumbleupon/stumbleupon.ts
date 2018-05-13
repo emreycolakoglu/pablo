@@ -19,6 +19,7 @@ export class StumbleuponRepository {
   ) {
     const d = Q.defer();
 
+    logger.debug(`starting stumbleupon post`);
     try {
       const client = new StumbleUponClient(
         actionInstance.serviceInstance.username,
@@ -39,6 +40,7 @@ export class StumbleuponRepository {
         .postToStumbleUpon(url.value, "Pornography", undefined, true, undefined)
         .then((stumbleuponResult: StumbleUponPostResult) => {
           const output: any = JSON.stringify(stumbleuponResult);
+          logger.debug(`finished stumbleUpon post: ${output}`);
           actionInstance.outputs = [];
           actionInstance.outputs.push({
             name: "success",

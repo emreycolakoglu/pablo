@@ -1,5 +1,5 @@
 import * as winston from "winston";
-import { format } from "logform";
+import { format, TransformableInfo } from "logform";
 
 const alignedWithColorsAndTime = format.combine(
   format.colorize(),
@@ -8,11 +8,24 @@ const alignedWithColorsAndTime = format.combine(
   format.printf(info => `${info.level}: ${info.message}`)
 );
 
+const fileFormat = format.combine(
+  format.timestamp(),
+  format.align(),
+  format.printf((info: TransformableInfo) => {
+    return `${info.level}: ${info.message}`;
+  })
+);
+
 const loggerConfig: any = {
   level: process.env.LOGLEVEL,
   transports: [
     new winston.transports.Console({
       format: alignedWithColorsAndTime
+    }),
+    new winston.transports.File({
+      format: fileFormat,
+      filename: "errors.log",
+      level: "error"
     })
   ]
 };
