@@ -38,9 +38,7 @@ export class StumbleuponRepository {
       client
         .postToStumbleUpon(url.value, "Pornography", undefined, true, undefined)
         .then((stumbleuponResult: StumbleUponPostResult) => {
-          const output: any = stumbleuponResult._success
-            ? stumbleuponResult._success
-            : `${JSON.stringify(stumbleuponResult._reason)}`;
+          const output: any = JSON.stringify(stumbleuponResult);
           actionInstance.outputs = [];
           actionInstance.outputs.push({
             name: "success",
