@@ -65,7 +65,7 @@
                   <h3 class="panel-title">Existing Instances</h3>
                 </div>
                 <div class="panel-body">
-                  <button class="btn btn-info btn-sm" ng-repeat="instance in self.serviceInstances" ng-click="self.selectExistingServiceInstance(instance)">{{instance.endpoint}}</button>
+                  <button class="btn btn-info btn-sm" ng-repeat="instance in self.serviceInstances" ng-click="self.selectExistingServiceInstance(instance)">{{instance.endpoint || instance.username}}</button>
                 </div>
               </div>
             </div>
