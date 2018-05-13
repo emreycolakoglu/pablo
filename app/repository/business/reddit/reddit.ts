@@ -110,7 +110,7 @@ export class RedditRepository {
           logger.debug(`couldn't find new post`);
           actionInstance.outputs = [];
           await actionInstance.save();
-          d.resolve(actionInstance);
+          d.reject(new Error(`New Reddit post not found on ${subreddit.value}`));
         }
       } else {
         // daha onceden hic post datasi kaydetmemisiz
