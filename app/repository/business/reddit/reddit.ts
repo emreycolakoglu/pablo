@@ -98,6 +98,12 @@ export class RedditRepository {
             value: newPost.data.thumbnail,
             type: 1
           });
+          actionInstance.outputs.push({
+            name: "author",
+            key: "author",
+            value: newPost.data.author,
+            type: 1
+          });
 
           // bir sonraki check icin payload guncelle
           actionInstance.payload = ids;
